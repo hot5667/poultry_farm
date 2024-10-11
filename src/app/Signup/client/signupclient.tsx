@@ -1,18 +1,15 @@
-'use client'
+'use client';
 
-import { useState } from "react"
-import { useRouter } from 'next/navigation';
+import AuthPage from '../../../components/autoAuthComponents'; // AuthPage 컴포넌트 임포트
 
 const SignClient = () => {
-     const router = useRouter();
-     const [email, setEmail] = useState('');
-     const [password, setPassword] = useState('');
+  const authType = 'signup'; // 또는 'login'으로 변경
 
-     return (
-          <div>
-               <h1>
-                    
-               </h1>
-          </div>
-     )
-}
+  return (
+    <div>
+      <AuthPage type={authType} />
+    </div>
+  );
+};
+
+export default SignClient;

@@ -1,4 +1,6 @@
+import React from 'react';
 import { Metadata } from 'next';
+import AuthPage from '../../components/autoAuthComponents'; // AuthPage 컴포넌트 임포트
 
 export const metadata: Metadata = {
   title: '회원가입 페이지',
@@ -6,7 +8,11 @@ export const metadata: Metadata = {
 };
 
 const SignPage = () => {
-  return <div>회원가입 페이지 입니다.</div>;
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <AuthPage type="signup" />
+    </div>
+  );
 };
 
 export default SignPage;
