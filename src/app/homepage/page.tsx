@@ -1,5 +1,4 @@
 import React from 'react';
-
 import DdayList from './_component/D-Day';
 import Timer from './_component/timer';
 import FocusOn from './_component/focusOn';
