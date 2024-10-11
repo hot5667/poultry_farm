@@ -1,7 +1,8 @@
 import React from 'react';
-import Timer from './_component/timer';
+
 import FocusOn from './_component/FocusOn';
 import DdayList from './_component/dDay';
+import Timer from './_component/timer';
 
 const HomePage = () => {
   return (

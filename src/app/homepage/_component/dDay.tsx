@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState } from 'react';
 
 interface DdayItem {
@@ -32,32 +31,39 @@ const DdayList = () => {
   };
 
   return (
-    <div>
+    <div className="m-10">
       <h1 className="text-2xl font-bold">Challenge</h1>
 
       <div className="my-4">
         {ddayList.map((item, index) => (
-          <div key={index}>
-            <span className="font-bold">D-{item.dday}</span> {item.title}
+          <div
+            key={index}
+            className="flex items-center justify-between bg-soft text-white font-bold py-2 px-4 rounded-lg mb-2 w-40"
+          >
+            <span className="font-bold text-lg">D-{item.dday}</span>
+            <span className="font-normal ml-2">{item.title}</span>
           </div>
         ))}
       </div>
 
       <button
-        className="bg-gray-400 p-2 rounded"
+        className="bg-gray-300 px-4 py-2 rounded"
         onClick={() => setFormVisible(true)}
       >
         +
       </button>
 
       {formVisible && (
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-4 flex flex-col items-start"
+        >
           <input
             type="text"
-            placeholder="제목"
+            placeholder="목표"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border p-2 rounded mr-2"
+            className="border p-2 rounded mr-2 mb-3"
           />
           <input
             type="date"
@@ -65,7 +71,10 @@ const DdayList = () => {
             onChange={(e) => setDate(e.target.value)}
             className="border p-2 rounded mr-2"
           />
-          <button type="submit" className="bg-blue-500 p-2 text-white rounded">
+          <button
+            type="submit"
+            className="p-2 rounded hover:text-soft transition-colors duration-300"
+          >
             저장
           </button>
         </form>
