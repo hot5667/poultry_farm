@@ -1,16 +1,19 @@
 import React from 'react';
 
 import FocusOn from './_component/FocusOn';
-import DdayList from './_component/dDay';
+import DdayList from './_component/D-Day';
 import Timer from './_component/timer';
 
 const HomePage = () => {
   return (
-    <div>
-      <h1>homepage</h1>
-      <Timer />
-      <DdayList />
-      <FocusOn />
+    <div className="flex justify-center">
+      <div className="w-1/4">
+        <DdayList />
+      </div>
+      <div className="w-3/4 flex flex-col items-center">
+        <Timer />
+        <FocusOn />
+      </div>
     </div>
   );
 };

@@ -64,12 +64,15 @@ const DdayList = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="border p-2 rounded mr-2 mb-3"
+            required
           />
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="border p-2 rounded mr-2"
+            min={new Date().toISOString().split('T')[0]}
+            required
           />
           <button
             type="submit"
