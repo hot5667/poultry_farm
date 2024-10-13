@@ -10,24 +10,24 @@ const Heatmap = () => {
 
   //sample date
   const data = [
-    { date: '2024-01-01', count: 1 },
-    { date: '2024-01-02', count: 1 },
-    { date: '2024-01-03', count: 0 },
-    { date: '2024-01-04', count: 3 },
-    { date: '2024-01-05', count: 2 },
-    { date: '2024-01-06', count: 1 },
-    { date: '2024-01-07', count: 3 },
-    { date: '2024-10-8', count: 2 },
-    { date: '2024-10-9', count: 2 },
+    { date: '2024-09-11', count: 3 },
+    { date: '2024-09-12', count: 1 },
+    { date: '2024-09-15', count: 2 },
+    { date: '2024-09-16', count: 3 },
+    { date: '2024-09-24', count: 3 },
+    { date: '2024-09-25', count: 3 },
+    { date: '2024-10-05', count: 1 },
+    { date: '2024-10-07', count: 2 },
+    { date: '2024-10-08', count: 2 },
+    { date: '2024-10-09', count: 2 },
     { date: '2024-10-10', count: 2 },
-    { date: '2024-10-11', count: 3 },
   ];
   const handleMouseOver = (e: React.MouseEvent<SVGRectElement, MouseEvent>) => {
     e.currentTarget.style.cursor = 'pointer';
   };
 
   return (
-    <div className="w-2/3 mx-auto p-5">
+    <div className="grid-start-2 p-3 w-full mx-auto place-items-center md:pr-28">
       <CalendarHeatmap
         startDate={new Date('2024-01-01')}
         endDate={today}

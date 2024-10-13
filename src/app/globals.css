@@ -12,20 +12,20 @@
 }
 
 .react-calendar-heatmap .color-scale-1 {
-  fill: #d6e685; /* 1 count */
+  fill: #d3ee98; /* 1 count */
 }
 
 .react-calendar-heatmap .color-scale-2 {
-  fill: #8cc665; /* 2 count */
+  fill: #a0d683; /* 2 count */
 }
 
 .react-calendar-heatmap .color-scale-3 {
-  fill: #44a340; /* 3 count */
+  fill: #72bf78; /* 3 count */
 }
 
 .react-calendar-heatmap-month-labels {
-  font-size: 10px;
+  font-size: 8px;
 }
 .react-calendar-heatmap-weekday-label {
-  font-size: 10px;
+  font-size: 8px;
 }
