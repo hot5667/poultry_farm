@@ -15,7 +15,7 @@ const FocusOn = () => {
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
-      <h1 className="mb-2 text-2xl text-gray-500">
+      <h1 className="mb-2 text-xl text-gray-500">
         (닉네임)님, 오늘 가장 중요한 일은 뭔가요?
       </h1>
 
@@ -33,6 +33,10 @@ const FocusOn = () => {
           <p className="text-4xl font-semibold">{submittedTask}</p>
         </div>
       )}
+
+      <p className="text-gray-200 text-sm  absolute bottom-10 w-full text-center">
+        "성공은 실패를 거듭하면서도 열정을 잃지 않는 것이다." - 윈스턴 처칠
+      </p>
     </div>
   );
 };

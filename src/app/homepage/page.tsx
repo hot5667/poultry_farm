@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import DdayList from './_component/D-Day';
 import Timer from './_component/timer';
 import FocusOn from './_component/focusOn';
+import Memo from './_component/Memo';
 
 const HomePage = () => {
   const [selectedDdayId, setSelectedDdayId] = useState<number | null>(null);
@@ -39,7 +40,7 @@ const HomePage = () => {
           <FocusOn />
         </div>
         <div className="w-1/4 flex items-start justify-end">
-          {/* <FocusOn /> */}
+          <Memo />
         </div>
       </div>
     </div>
