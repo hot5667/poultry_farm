@@ -64,7 +64,7 @@ const DdayList: React.FC<DdayListProps> = ({
             className={`flex flex-col items-start justify-between py-2 px-4 rounded-lg mb-2 w-40
               ${
                 selectedDdayId === item.id
-                  ? 'bg-soft text-white '
+                  ? 'bg-soft text-black '
                   : 'border border-soft text-black'
               }
             `}
