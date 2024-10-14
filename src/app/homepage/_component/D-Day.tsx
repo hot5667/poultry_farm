@@ -2,32 +2,54 @@
 import React, { useState } from 'react';
 
 interface DdayItem {
+  id: number;
   title: string;
   dday: number;
 }
 
-const DdayList = () => {
+interface DdayListProps {
+  onSelectDday: (id: number) => void;
+  selectedDdayId: number | null;
+  ddayTimes: { [key: number]: number }; // D-Day별 누적 시간을 받는 속성
+}
+
+const DdayList: React.FC<DdayListProps> = ({
+  onSelectDday,
+  selectedDdayId,
+  ddayTimes,
+}) => {
   const [formVisible, setFormVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [ddayList, setDdayList] = useState<DdayItem[]>([]);
 
-  // D-day계산
+  // D-day 계산
   const calculateDday = (selectedDate: string) => {
     const today = new Date();
     const targetDate = new Date(selectedDate);
     const timeDifference = targetDate.getTime() - today.getTime();
-    const dday = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-    return dday;
+    return Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newItem = { title, dday: calculateDday(date) };
+    const newItem = {
+      id: ddayList.length + 1,
+      title,
+      dday: calculateDday(date),
+    };
     setDdayList([...ddayList, newItem]);
     setTitle('');
     setDate('');
     setFormVisible(false);
+  };
+
+  const formatTime = (time: number) => {
+    const getSeconds = `0${time % 60}`.slice(-2);
+    const minutes = `${Math.floor(time / 60)}`;
+    const getMinutes = `0${Number(minutes) % 60}`.slice(-2);
+    const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
+    return `${getHours}:${getMinutes}:${getSeconds}`;
   };
 
   return (
@@ -38,10 +60,22 @@ const DdayList = () => {
         {ddayList.map((item, index) => (
           <div
             key={index}
-            className="flex items-center justify-between bg-soft text-white font-bold py-2 px-4 rounded-lg mb-2 w-40"
+            onClick={() => onSelectDday(item.id)}
+            className={`flex flex-col items-start justify-between py-2 px-4 rounded-lg mb-2 w-40
+              ${
+                selectedDdayId === item.id
+                  ? 'bg-soft text-white '
+                  : 'border border-soft text-black'
+              }
+            `}
           >
-            <span className="font-bold text-lg">D-{item.dday}</span>
-            <span className="font-normal ml-2">{item.title}</span>
+            <div>
+              <span className="font-bold text-lg">D-{item.dday}</span>
+              <span className="font-normal ml-2">{item.title}</span>
+            </div>
+            <span className="text-sm text-gray-500">
+              누적 시간: {formatTime(ddayTimes[item.id] || 0)}
+            </span>
           </div>
         ))}
       </div>
