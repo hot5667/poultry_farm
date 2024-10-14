@@ -10,7 +10,7 @@ interface DdayItem {
 interface DdayListProps {
   onSelectDday: (id: number) => void;
   selectedDdayId: number | null;
-  ddayTimes: { [key: number]: number }; // D-Day별 누적 시간을 받는 속성
+  ddayTimes: { [key: number]: number };
 }
 
 const DdayList: React.FC<DdayListProps> = ({
