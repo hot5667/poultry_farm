@@ -42,8 +42,8 @@ const AuthPage = ({ type }: AuthPageProps) => {
                if (type === 'signup') {
                     setMessage('회원가입 성공! 확인 이메일을 확인해주세요.');
                } else {
-                    setMessage('로그인 성공! 대시보드로 이동합니다.');
-                    router.push('/dashboard');
+                    setMessage('로그인 성공! 메인페이지로 이동합니다.');
+                    router.push('/');
                }
           }
 

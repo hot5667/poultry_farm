@@ -3,7 +3,7 @@
 import AuthPage from '../../../components/autoAuthComponents'; // AuthPage 컴포넌트 임포트
 
 const SignClient = () => {
-  const authType = 'signup'; // 또는 'login'으로 변경
+  const authType = 'signup';
 
   return (
     <div>
