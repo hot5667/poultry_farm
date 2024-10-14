@@ -1,9 +1,10 @@
+'use client';
 import Image from 'next/image';
 import React from 'react';
 
 const Profile = () => {
   return (
-    <div className="w-[200px] h-auto p-2 md:ml-7 -my-5">
+    <div className="w-[200px] h-auto p-2 md:ml-7">
       <Image
         src="/assets/default-profile.jpg"
         width={200}
@@ -19,6 +20,8 @@ const Profile = () => {
 
         <p className="mt-1">오늘도 화이팅!</p>
         <p className="text-gray-300 font-medium">test@test.com</p>
+
+        <button>수정</button>
       </div>
     </div>
   );

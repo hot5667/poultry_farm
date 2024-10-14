@@ -27,27 +27,25 @@ const Heatmap = () => {
   };
 
   return (
-    <div className="grid-start-2 p-3 w-full mx-auto place-items-center md:pr-28">
-      <CalendarHeatmap
-        startDate={new Date('2024-01-01')}
-        endDate={today}
-        values={data}
-        showWeekdayLabels={true}
-        onMouseOver={(e) => handleMouseOver(e)}
-        classForValue={(value) => {
-          if (!value) {
-            return 'color-empty'; // 데이터가 없을 때
-          }
-          return `color-scale-${value.count}`; // 데이터에 맞는 클래스 반환
-        }}
-        tooltipDataAttrs={(value: { date: string; count: number }) => ({
-          'data-tip': `${value.date}: ${value.count}`,
-        })}
-        onClick={(value) =>
-          alert(`Clicked on ${value?.date} with count ${value?.count}`)
+    <CalendarHeatmap
+      startDate={new Date('2024-01-01')}
+      endDate={today}
+      values={data}
+      showWeekdayLabels={true}
+      onMouseOver={(e) => handleMouseOver(e)}
+      classForValue={(value) => {
+        if (!value) {
+          return 'color-empty'; // 데이터가 없을 때
         }
-      />
-    </div>
+        return `color-scale-${value.count}`; // 데이터에 맞는 클래스 반환
+      }}
+      tooltipDataAttrs={(value: { date: string; count: number }) => ({
+        'data-tip': `${value.date}: ${value.count}`,
+      })}
+      onClick={(value) =>
+        alert(`Clicked on ${value?.date} with count ${value?.count}`)
+      }
+    />
   );
 };
 
