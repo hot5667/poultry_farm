@@ -6,6 +6,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import AccountForm from './ProfileImage';
 import Avatar from './ProfileImage';
+import ProfileImage from './ProfileImage';
 
 interface ProfileProps {
   user: User;
@@ -14,7 +15,7 @@ interface ProfileProps {
 
 const Profile = ({ user, session }: ProfileProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [nickname, setNickname] = useState(user.email || '');
+  const [nickname, setNickname] = useState('');
   const queryClient = useQueryClient();
   // User 테이블 데이터 가져오기
   const { data: users, error: usersError } = useQuery({
@@ -32,7 +33,6 @@ const Profile = ({ user, session }: ProfileProps) => {
   const handleCancel = () => {
     setIsEditing(false);
   };
-
   // 닉네임 변경
   const updateUser = async (newNickname: string) => {
     if (!session) {
@@ -68,13 +68,16 @@ const Profile = ({ user, session }: ProfileProps) => {
   // console.log(loggedInUser);
   return (
     <div className="w-[200px] h-auto p-2 md:ml-7">
-      <Image
-        src="/assets/default-profile.jpg"
-        width={200}
-        height={200}
-        alt="default-image
-      "
-      />
+      {isEditing ? (
+        <ProfileImage uid={user.id} currentUserImage={loggedInUser.UserImage} />
+      ) : (
+        <Image
+          src={loggedInUser?.UserImage || '/assets/default-profile.jpg'}
+          width={200}
+          height={200}
+          alt="User Image"
+        />
+      )}
       <div className="flex flex-col items-center">
         <div className="flex flex-row items-baseline justify-center mt-2">
           <h2 className="font-black text-2xl md:text-3xl">
@@ -87,26 +90,29 @@ const Profile = ({ user, session }: ProfileProps) => {
         <p className="text-gray-300 font-medium">{user.email}</p>
 
         {isEditing ? (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <input
-              className="border border-gray-500"
+              className="border border-gray-500 mb-2"
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="새로운 닉네임을 입력하세요"
             />
-            <button type="submit" className="p-2 border border-gray-500">
+            <button type="submit" className="p-2 border border-gray-500 mb-2">
               저장
             </button>
             <button
               onClick={handleCancel}
+              type="button"
               className="p-2 border border-gray-500"
             >
               취소
             </button>
           </form>
         ) : (
-          <button onClick={handleEdit}>수정</button>
+          <button onClick={handleEdit} className="p-2 border border-gray-500">
+            수정
+          </button>
         )}
       </div>
     </div>
