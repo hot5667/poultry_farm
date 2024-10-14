@@ -1,34 +1,17 @@
-"use client"
-
-import { Calendar } from "@/components/ui/calendar"
-import { DatePickerWithRange } from "@/components/ui/datePicker"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-
-import { ko } from "date-fns/locale";
-import React from "react"
+import MyCalendar from "../components/calendar/page"
 
 
-const detailPage = () => {
-    // 샤드시엔 달력 날짜
-    const [date, setDate] = React.useState<Date | undefined>(new Date())
 
+const DetailPage = () => {
+  const date = new Date();
+  const initialYear = date.getFullYear();
+  const initialMonth = date.getMonth();
   return (
     
     <>
-     <Calendar
-    locale={ko}
-    mode="single"
-    selected={date}
-    onSelect={setDate}
-    className="flex items-center justify-center"
-  />
-  <DatePickerWithRange/>
+    <MyCalendar />
     </>
   )
 }
 
-export default detailPage
+export default DetailPage
