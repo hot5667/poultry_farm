@@ -61,9 +61,12 @@ const Timer: React.FC<TimerProps> = ({ selectedDdayId, onTimeUpdate }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-10 border-2 border-soft rounded-full w-80 h-80 p-10">
-      <h1 className="text-5xl font-semibold mt-20">{formatTime(time)}</h1>
-      <div className="flex flex-row items-center justify-center mt-20">
+    // <div className="flex flex-col items-center justify-center m-10 border-2 border-soft rounded-full w-80 h-80 p-10">
+    <div className="flex flex-col items-center justify-center m-10 ">
+      <h1 className="text-9xl font-semibold mt-20 text-soft">
+        {formatTime(time)}
+      </h1>
+      <div className="flex flex-row items-center justify-center">
         <button
           onClick={toggle}
           className="p-2 rounded hover:text-soft transition-colors duration-300"
