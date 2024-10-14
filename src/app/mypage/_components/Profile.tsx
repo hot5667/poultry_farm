@@ -4,9 +4,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import AccountForm from './ProfileImage';
-import Avatar from './ProfileImage';
-import ProfileImage from './ProfileImage';
+import UploadImage from './UploadImage';
 
 interface ProfileProps {
   user: User;
@@ -69,7 +67,7 @@ const Profile = ({ user, session }: ProfileProps) => {
   return (
     <div className="w-[200px] h-auto p-2 md:ml-7">
       {isEditing ? (
-        <ProfileImage uid={user.id} currentUserImage={loggedInUser.UserImage} />
+        <UploadImage uid={user.id} currentUserImage={loggedInUser.UserImage} />
       ) : (
         <Image
           src={loggedInUser?.UserImage || '/assets/default-profile.jpg'}
