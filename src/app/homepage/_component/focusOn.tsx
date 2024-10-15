@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabaseClient';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -20,6 +22,33 @@ const FocusOn = () => {
     }
   };
 
+  const fetchNickname = async () => {
+    // 현재 로그인한 유저의 ID 가져오기
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError)
+      throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
+
+    const userId = userData?.user?.id; // 현재 로그인된 유저 ID
+    if (userId) {
+      // User 테이블에서 UserID가 일치하는 닉네임 검색
+      const { data, error } = await supabase
+        .from('User')
+        .select('NickName')
+        .eq('UserID', userId) // User 테이블에서 UserID 일치하는지 확인
+        .single();
+
+      if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
+      return data?.NickName || '';
+    }
+    throw new Error('로그인된 사용자가 없습니다');
+  };
+
+  // useQuery를 사용하여 닉네임 데이터를 가져옴
+  const { data: nickname } = useQuery({
+    queryKey: ['nickname'],
+    queryFn: fetchNickname,
+  });
+
   // 명언 불러오기
   const fetchRandomQuote = async () => {
     try {
@@ -34,12 +63,15 @@ const FocusOn = () => {
 
   useEffect(() => {
     fetchRandomQuote();
+    fetchNickname();
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
       <h1 className="mb-2 text-xl text-gray-500">
-        (닉네임)님, 오늘 가장 중요한 일은 뭔가요?
+        {nickname
+          ? `${nickname}님, 오늘 가장 중요한 일은 뭔가요?`
+          : '로딩 중...'}
       </h1>
 
       {(!submittedTask || isEditing) && (
