@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from '../util/ReactQueryProvider';
-import  NavLink from '../components/NavLink'
+import NavLink from '../components/NavLink';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,9 +22,9 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          <NavLink href="/">작성해주세요</NavLink> 
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          {/* <NavLink href="/">작성해주세요</NavLink> 로그인 로그아웃 */}
         </ul>
       </div>
     </nav>
@@ -44,6 +44,3 @@ export default function RootLayout({ children, }:
     </html>
   );
 }
-
-
-

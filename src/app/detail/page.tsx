@@ -1,7 +1,5 @@
 import MyCalendar from "../components/calendar/page"
 
-
-
 const DetailPage = () => {
   const date = new Date();
   const initialYear = date.getFullYear();
