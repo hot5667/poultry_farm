@@ -18,3 +18,36 @@ export const useAddMutation = () => {
     },
   });
 };
+
+const deleteComment = async (commentId: number) => {
+  return await browserClient.from('Comment').delete().eq('User_ID', commentId);
+};
+
+export const useDeleteMutation = () => {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => deleteComment,
+    onSuccess: async () => {
+      client.invalidateQueries({ queryKey: ['Comment'] });
+    },
+  });
+};
+
+const updateComment = async (commentId: number, comment: string) => {
+  return await browserClient
+    .from('Comment')
+    .update({ Comment_Content: comment })
+    .eq('User_ID', commentId);
+};
+
+export const useUpdateMutation = () => {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => await updateComment,
+    onSuccess: async () => {
+      client.invalidateQueries({ queryKey: ['Comment'] });
+    },
+  });
+};
