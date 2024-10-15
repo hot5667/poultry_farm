@@ -39,6 +39,7 @@ const DdayList: React.FC<DdayListProps> = ({
       dday: calculateDday(date),
     };
     setDdayList([...ddayList, newItem]);
+    onSelectDday(newItem.id);
     setTitle('');
     setDate('');
     setFormVisible(false);
@@ -57,9 +58,9 @@ const DdayList: React.FC<DdayListProps> = ({
       <h1 className="text-2xl font-bold">Challenge</h1>
 
       <div className="my-4">
-        {ddayList.map((item, index) => (
+        {ddayList.map((item) => (
           <div
-            key={index}
+            key={item.id}
             onClick={() => onSelectDday(item.id)}
             className={`flex flex-col items-start justify-between py-2 px-4 rounded-lg mb-2 w-40
               ${
