@@ -39,6 +39,7 @@ const DdayList: React.FC<DdayListProps> = ({
       dday: calculateDday(date),
     };
     setDdayList([...ddayList, newItem]);
+    onSelectDday(newItem.id);
     setTitle('');
     setDate('');
     setFormVisible(false);
