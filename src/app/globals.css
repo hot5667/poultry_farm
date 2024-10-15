@@ -29,7 +29,7 @@
 .react-calendar-heatmap-weekday-label {
   font-size: 8px;
 }
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -91,4 +91,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} */
