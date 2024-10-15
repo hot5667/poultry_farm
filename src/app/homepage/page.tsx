@@ -1,22 +1,22 @@
 'use client';
 import React, { useState } from 'react';
-
 import DdayList from './_component/D-Day';
-
 import Memo from './_component/Memo';
 import Timer from './_component/Timer';
 import FocusOn from './_component/focusOn';
 
 const HomePage = () => {
-  const [selectedDdayId, setSelectedDdayId] = useState<number | null>(null);
-  const [ddayTimes, setDdayTimes] = useState<{ [key: number]: number }>({});
+  // 타입을 number에서 string으로 변경
+  const [selectedDdayId, setSelectedDdayId] = useState<string | null>(null);
+  const [ddayTimes, setDdayTimes] = useState<{ [key: string]: number }>({}); // key 타입도 string으로 변경
 
-  const handleSelectDday = (id: number) => {
+  // D-day 선택 핸들러 수정
+  const handleSelectDday = (id: string) => {
     setSelectedDdayId(id);
   };
 
   // 누적 시간을 업데이트하는 함수
-  const handleTimeUpdate = (id: number, time: number) => {
+  const handleTimeUpdate = (id: string, time: number) => {
     setDdayTimes((prevTimes) => ({
       ...prevTimes,
       [id]: (prevTimes[id] || 0) + time,
@@ -33,7 +33,7 @@ const HomePage = () => {
         />
       </div>
       <div className="w-3/4 flex flex-row items-start justify-between mt-10">
-        <div className="w-2/4 flex  flex-col items-center mt-10">
+        <div className="w-2/4 flex flex-col items-center mt-10">
           <Timer
             selectedDdayId={selectedDdayId}
             onTimeUpdate={handleTimeUpdate}
@@ -49,6 +49,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-//페이지에는 css만 남기도록 수정하기!
-// 수정삭제는 디테일 페이지로 넘어가도록!

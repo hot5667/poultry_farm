@@ -16,7 +16,7 @@ const Navbar = () => {
           <h1 className="text-black text-2xl font-bold">양계장</h1>
         </div>
         <ul className="flex items-center space-x-8">
-          <NavLink href="/">홈</NavLink>
+          <NavLink href="/homepage">홈</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
           <li className="nav-link">|</li>
