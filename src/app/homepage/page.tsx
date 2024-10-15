@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import DdayList from './_component/D-Day';
 import Memo from './_component/Memo';
-import Timer from './_component/Timer';
+
 import FocusOn from './_component/focusOn';
+import Timer from './_component/timer';
 
 const HomePage = () => {
   // 타입을 number에서 string으로 변경
