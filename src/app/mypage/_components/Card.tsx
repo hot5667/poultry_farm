@@ -1,13 +1,11 @@
 'use client';
-import browserClient from '@/util/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { useQuery } from '@tanstack/react-query';
 import { progressImages } from '../progress';
 import { MyPageFeed } from '@/type/mypage';
 import { getComunityInfo } from '@/quries/useGetComunityQuery';
 
 interface CardProps {
-  user: User;
+  user?: User;
 }
 const Card = ({ user }: CardProps) => {
   // feed테이블 정보 가져오기
@@ -48,12 +46,12 @@ const Card = ({ user }: CardProps) => {
   };
 
   // user가 작성한 feed 가져오기
-  const mypageFeed = feeds?.find((feed) => feed.User_feed_ID === user.id);
-  console.log(mypageFeed);
-  console.log(feeds);
+  const mypageFeed = feeds?.find((feed) => feed.User_feed_ID === user?.id);
+  // console.log(mypageFeed);
+  // console.log(feeds);
   // mypageFeeds가 undefined, null이면 return
   if (!mypageFeed) {
-    return console.log('mypageFeeds를 찾을 수 없습니다.');
+    return <></>;
   }
   const progress = calculateProgress(mypageFeed);
 
