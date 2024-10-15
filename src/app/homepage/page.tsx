@@ -25,22 +25,22 @@ const HomePage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="w-1/4">
+      <div className="w-1/4 mt-10">
         <DdayList
           onSelectDday={handleSelectDday}
           selectedDdayId={selectedDdayId}
           ddayTimes={ddayTimes}
         />
       </div>
-      <div className="w-3/4 flex flex-row items-start justify-between">
-        <div className="w-2/4 flex  flex-col items-center">
+      <div className="w-3/4 flex flex-row items-start justify-between mt-10">
+        <div className="w-2/4 flex  flex-col items-center mt-10">
           <Timer
             selectedDdayId={selectedDdayId}
             onTimeUpdate={handleTimeUpdate}
           />
           <FocusOn />
         </div>
-        <div className="w-1/4 flex items-start justify-end">
+        <div className="w-1/4 flex items-start justify-end mt-10">
           <Memo />
         </div>
       </div>

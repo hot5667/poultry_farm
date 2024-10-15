@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from '../util/ReactQueryProvider';
-import  NavLink from '../components/NavLink'
 import './globals.css';
+import NavLink from '../components/NavLink';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -31,19 +31,17 @@ const Navbar = () => {
   );
 };
 
-export default function RootLayout({ children, }:
-  Readonly<{
+export default function RootLayout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ko">
-    <body>
-    <Navbar/>
-    <ReactQueryProvider>{children}</ReactQueryProvider>
-    </body>
+      <body>
+        <Navbar />
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+      </body>
     </html>
   );
 }
-
-
-
