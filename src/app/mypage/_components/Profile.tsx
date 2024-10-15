@@ -72,7 +72,7 @@ const Profile = ({ user, session }: ProfileProps) => {
   return (
     <div className="w-[200px] h-auto p-2 md:ml-7">
       {isEditing ? (
-        <UploadImage uid={user.id} currentUserImage={userInfo.UserImage} />
+        <UploadImage uid={user.id} currentUserImage={userInfo?.UserImage} />
       ) : (
         <Image
           src={userInfo?.UserImage || '/assets/default-profile.jpg'}
@@ -101,16 +101,22 @@ const Profile = ({ user, session }: ProfileProps) => {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="새로운 닉네임을 입력하세요"
             />
-            <button type="submit" className="p-2 border border-gray-500 mb-2">
-              저장
-            </button>
-            <button
-              onClick={handleToggleEdit}
-              type="button"
-              className="p-2 border border-gray-500"
-            >
-              취소
-            </button>
+
+            <div className="flex flex-row justify-center items-center gap-1">
+              <button
+                type="submit"
+                className="p-1 text-sm border border-gray-500"
+              >
+                저장
+              </button>
+              <button
+                onClick={handleToggleEdit}
+                type="button"
+                className="p-1 text-sm border border-gray-500"
+              >
+                취소
+              </button>
+            </div>
           </form>
         ) : (
           <button
