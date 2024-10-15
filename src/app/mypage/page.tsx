@@ -3,6 +3,12 @@ import Card from './_components/Card';
 import Heatmap from './_components/Heatmap';
 import Profile from './_components/Profile';
 import browserClient from '@/util/supabase/client';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '마이 페이지',
+  description: '양계장 마이페이지',
+};
 
 const MyPage = async () => {
   const supabase = createClient();
