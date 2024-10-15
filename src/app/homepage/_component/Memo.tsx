@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const Memo = () => {
   const [memoText, setMemoText] = useState('');
+
   return (
     <div className=" m-10 bg-gray-100 rounded-lg">
       <h1 className="mb-0 m-3 text-m font-bold ">메모장</h1>

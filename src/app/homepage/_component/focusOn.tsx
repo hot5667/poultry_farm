@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const FocusOn = () => {
   const [task, setTask] = useState('');
   const [submittedTask, setSubmittedTask] = useState<string | null>(null);
+  const [randomQuote, setRandomQuote] = useState<{
+    quote: string;
+    author: string;
+  } | null>(null);
 
-  // 엔터
+  // 엔터입력
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -12,6 +17,22 @@ const FocusOn = () => {
       setTask('');
     }
   };
+
+  // 명언 불러오기
+  const fetchRandomQuote = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/quotes');
+      const quotes = response.data;
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      setRandomQuote(quotes[randomIndex]);
+    } catch (error) {
+      console.error('명언을 불러오는 중 에러 발생:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomQuote();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
@@ -34,13 +55,13 @@ const FocusOn = () => {
         </div>
       )}
 
-      <p className="text-gray-200 text-sm  absolute bottom-10 w-full text-center">
-        "성공은 실패를 거듭하면서도 열정을 잃지 않는 것이다." - 윈스턴 처칠
-      </p>
+      {randomQuote && (
+        <p className="text-gray-200 text-sm absolute bottom-10 w-full text-center">
+          "{randomQuote.quote}" - {randomQuote.author}
+        </p>
+      )}
     </div>
   );
 };
 
 export default FocusOn;
-
-// 명언 추가
