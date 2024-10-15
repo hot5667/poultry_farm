@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 
 import DdayList from './_component/D-Day';
+
+import Memo from './_component/Memo';
 import Timer from './_component/Timer';
 import FocusOn from './_component/FocusOn';
 
@@ -39,7 +41,7 @@ const HomePage = () => {
           <FocusOn />
         </div>
         <div className="w-1/4 flex items-start justify-end">
-          {/* <FocusOn /> */}
+          <Memo />
         </div>
       </div>
     </div>
@@ -47,3 +49,7 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+//페이지에는 css만 남기도록 수정하기!
+// 수정삭제는 디테일 페이지로 넘어가도록!
+// 오늘 목데이터 만들어서 명언 랜덤 설정까지 하기!!
