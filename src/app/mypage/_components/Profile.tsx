@@ -15,22 +15,24 @@ const Profile = ({ user, session }: ProfileProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [nickname, setNickname] = useState('');
   const queryClient = useQueryClient();
+
   // User 테이블 데이터 가져오기
-  const { data: users, error: usersError } = useQuery({
-    queryKey: ['users'],
+  const {
+    data: userInfo,
+    error: userInfoError,
+    isLoading: userInfoIsLoading,
+  } = useQuery({
+    queryKey: ['users', user.id],
     queryFn: async () => {
-      const { data, error } = await browserClient.from('User').select('*');
-      return data;
+      const { data, error } = await browserClient
+        .from('User')
+        .select('*')
+        .eq('UserID', user.id);
+      if (!data) return;
+      return data[0];
     },
   });
-  // 닉네임 수정 form 열기
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-  // 닉네임 수정 form 닫기
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
+
   // 닉네임 변경
   const updateUser = async (newNickname: string) => {
     if (!session) {
@@ -47,30 +49,33 @@ const Profile = ({ user, session }: ProfileProps) => {
     setNickname(newNickname);
     setIsEditing(false);
   };
+
   const { mutate } = useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['users'],
+        queryKey: ['users', user.id],
       });
     },
   });
+
+  // 닉네임 수정 form 토글
+  const handleToggleEdit = () => {
+    setIsEditing((prev) => !prev);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(nickname);
   };
-
-  const loggedInUser = users?.find((e) => e.UserID === user.id);
-  console.log('유저정보--------->', user);
-  // console.log(loggedInUser);
+  console.log(userInfo);
   return (
     <div className="w-[200px] h-auto p-2 md:ml-7">
       {isEditing ? (
-        <UploadImage uid={user.id} currentUserImage={loggedInUser.UserImage} />
+        <UploadImage uid={user.id} currentUserImage={userInfo.UserImage} />
       ) : (
         <Image
-          src={loggedInUser?.UserImage || '/assets/default-profile.jpg'}
+          src={userInfo?.UserImage || '/assets/default-profile.jpg'}
           width={200}
           height={200}
           alt="User Image"
@@ -79,7 +84,7 @@ const Profile = ({ user, session }: ProfileProps) => {
       <div className="flex flex-col items-center">
         <div className="flex flex-row items-baseline justify-center mt-2">
           <h2 className="font-black text-2xl md:text-3xl">
-            <p>{loggedInUser?.NickName}</p>
+            <p>{userInfo?.NickName}</p>
           </h2>
           <span>님,</span>
         </div>
@@ -100,7 +105,7 @@ const Profile = ({ user, session }: ProfileProps) => {
               저장
             </button>
             <button
-              onClick={handleCancel}
+              onClick={handleToggleEdit}
               type="button"
               className="p-2 border border-gray-500"
             >
@@ -108,7 +113,10 @@ const Profile = ({ user, session }: ProfileProps) => {
             </button>
           </form>
         ) : (
-          <button onClick={handleEdit} className="p-2 border border-gray-500">
+          <button
+            onClick={handleToggleEdit}
+            className="p-2 border border-gray-500"
+          >
             수정
           </button>
         )}
