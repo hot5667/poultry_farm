@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 잔디 채우기 색상 */
 .react-calendar-heatmap .color-empty {
   fill: #eeeeee; /* 빈 칸 색상 */
 }
@@ -29,7 +28,7 @@
 .react-calendar-heatmap-weekday-label {
   font-size: 8px;
 }
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -91,4 +90,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} */
