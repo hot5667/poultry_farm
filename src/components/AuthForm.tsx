@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../lib/supabaseClient';
+import  browserClient  from '../util/supabase/client';
 import { AuthResponse } from '@supabase/supabase-js';
 import Label from './Label';
 
@@ -30,9 +30,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
         let authResponse: AuthResponse;
 
         if (type == 'signup') {
-            authResponse = await supabase.auth.signUp({ email, password });
+            authResponse = await browserClient.auth.signUp({ email, password });
         } else {
-            authResponse = await supabase.auth.signInWithPassword({ email, password });
+            authResponse = await browserClient.auth.signInWithPassword({ email, password });
         }
 
         const { error } = authResponse;
@@ -42,6 +42,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         } else {
             if (type === 'signup') {
                 setMessage('회원가입 성공! 확인 이메일을 확인해주세요.');
+                router.push(`/${email}/additional-info`);
             } else {
                 setMessage('로그인 성공! 메인페이지로 이동합니다.');
                 router.push('/');
