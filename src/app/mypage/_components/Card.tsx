@@ -3,22 +3,10 @@ import browserClient from '@/util/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
 import { progressImages } from '../progress';
+import { MyPageFeed } from '@/type/mypage';
 
 interface CardProps {
   user: User;
-}
-
-// types 폴더로 이동
-interface MyPageFeed {
-  User_feed_ID: string;
-  User_ID: string | null; // User_ID가 null일 수도 있으므로
-  Challenge_end_progress: string;
-  Category: string;
-  Challenge_Comment: string;
-  Challenge_Images: string | null;
-  progress_icon: string | null;
-  Feed_Content: string | null;
-  Challenge_start_progress: string;
 }
 
 const fetchFeeds = async () => {
