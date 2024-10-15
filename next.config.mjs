@@ -2,6 +2,14 @@
 const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ipybojcftcgitunzyror.supabase.co',
+        port: '',
+        pathname: '/storage/**',
+      },
+    ],
   },
 };
 
