@@ -1,11 +1,12 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
 interface DdayItem {
   id: string;
   title: string;
   dday: number;
+  accumulatedTime?: number;
 }
 
 interface DdayListProps {
@@ -22,6 +23,7 @@ const DdayList: React.FC<DdayListProps> = ({
   const [formVisible, setFormVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
+  //ddayList 상태관리를 전역 상태관리로 변경
   const [ddayList, setDdayList] = useState<DdayItem[]>([]);
 
   // D-day 계산
@@ -46,13 +48,12 @@ const DdayList: React.FC<DdayListProps> = ({
 
     const newDday = {
       Title: title,
-      Start_Date: new Date().toISOString(), // 시작 날짜를 현재 날짜로 설정합니다.
-      End_Date: date, // 사용자가 입력한 종료 날짜
-      Accumulated_Time: 0, // 누적 시간 초기값 설정
-      User_ID: user.id, // 현재 사용자 ID 추가
+      Start_Date: new Date().toISOString(),
+      End_Date: date,
+      Accumulated_Time: 0,
+      User_ID: user.id,
     };
 
-    // Supabase에 새로운 D-day 데이터 추가
     const { data, error } = await supabase
       .from('Challenge')
       .insert(newDday)
@@ -63,16 +64,14 @@ const DdayList: React.FC<DdayListProps> = ({
       return;
     }
     if (data && Array.isArray(data) && data.length > 0) {
-      console.log('추가된 데이터:', data);
-
       const newItem = {
-        id: data[0].Challenge_ID, // 데이터베이스에서 반환된 ID 사용
+        id: data[0].Challenge_ID,
         title: data[0].Title,
         dday: calculateDday(data[0].End_Date),
       };
 
       setDdayList((prevList) => [...prevList, newItem]);
-      onSelectDday(data[0].Challenge_ID); // 추가된 D-day를 선택 상태로 업데이트
+      onSelectDday(data[0].Challenge_ID);
     }
 
     setTitle('');
@@ -87,6 +86,17 @@ const DdayList: React.FC<DdayListProps> = ({
     const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
+  function formatTimeSeconds(seconds: number) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    const formattedHours = String(hours).padStart(2, '0');
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(secs).padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
 
   // Supabase에서 Challenge 데이터를 가져오는 함수
   const fetchChallenges = async () => {
@@ -102,7 +112,7 @@ const DdayList: React.FC<DdayListProps> = ({
     const { data, error } = await supabase
       .from('Challenge')
       .select('*')
-      .eq('User_ID', user.id); // 현재 사용자 ID에 해당하는 데이터만 가져오기
+      .eq('User_ID', user.id);
 
     if (error) {
       console.error(
@@ -113,12 +123,12 @@ const DdayList: React.FC<DdayListProps> = ({
     }
 
     if (data) {
-      console.log('가져온 Challenge 데이터:', data);
-
+      console.log(data);
       const formattedData = data.map((item: any) => ({
         id: item.Challenge_ID,
         title: item.Title,
         dday: calculateDday(item.End_Date),
+        accumulatedTime: item.Accumulated_Time,
       }));
       setDdayList(formattedData);
     }
@@ -148,7 +158,7 @@ const DdayList: React.FC<DdayListProps> = ({
               <span className="font-normal ml-2">{item.title}</span>
             </div>
             <span className="text-sm text-gray-500">
-              누적 시간: {formatTime(ddayTimes[item.id] || 0)}
+              누적 시간: {formatTimeSeconds(item.accumulatedTime ?? 0)}
             </span>
           </div>
         ))}

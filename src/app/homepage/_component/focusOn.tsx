@@ -17,30 +17,37 @@ const FocusOn = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       setSubmittedTask(task);
-      // setTask('');
       setIsEditing(false);
     }
   };
 
   const fetchNickname = async () => {
-    // 로그인한 유저ID 가져오기
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError)
-      throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
+    try {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      if (userError)
+        throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
 
-    const userId = userData?.user?.id;
-    if (userId) {
-      // User테이블에서 UserID가 일치하는 닉네임 검색
-      const { data, error } = await supabase
-        .from('User')
-        .select('NickName')
-        .eq('UserID', userId)
-        .single();
+      const userId = userData?.user?.id;
+      if (userId) {
+        const { data, error } = await supabase
+          .from('User')
+          .select('NickName')
+          .eq('UserID', userId)
+          .single();
 
-      if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
-      return data?.NickName || '';
+        if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
+        return data?.NickName || '';
+      }
+      throw new Error('로그인된 사용자가 없습니다');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error('알 수 없는 오류 발생', error);
+      }
+      return '';
     }
-    throw new Error('로그인된 사용자가 없습니다');
   };
 
   // useQuery를 사용하여 닉네임 데이터를 가져옴
@@ -63,7 +70,6 @@ const FocusOn = () => {
 
   useEffect(() => {
     fetchRandomQuote();
-    fetchNickname();
   }, []);
 
   return (
