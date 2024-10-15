@@ -20,21 +20,19 @@ const MyPage = async () => {
   if (!user) return;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3">
+    <div className="flex flex-col justify-center items-center">
       {/* 프로필 섹션 */}
-      <section className="md:col-span-1 place-items-center md:mt-16">
-        <div className="flex flex-col justify-center items-center">
-          <Profile user={user} session={session} />
-        </div>
+      <section className="flex flex-col items-center md:w-1/3 md:mt-16">
+        <Profile user={user} session={session} />
       </section>
 
       {/* 히트맵 섹션 */}
-      <section className="grid-start-2 col-span-2 w-full px-3 m-auto place-items-center md:-mx-24">
+      {/* <section className="w-full md:w-1/3 px-3 m-auto mt-4 md:mt-0">
         <Heatmap />
-      </section>
+      </section> */}
 
       {/* 카드 섹션 */}
-      <section className="col-span-3">
+      <section className="w-full md:w-1/3 mt-4 md:mt-0">
         <Card user={user} />
       </section>
     </div>
