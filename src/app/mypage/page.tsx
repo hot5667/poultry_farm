@@ -2,25 +2,22 @@ import { createClient } from '@/util/supabase/server';
 import Card from './_components/Card';
 import Heatmap from './_components/Heatmap';
 import Profile from './_components/Profile';
+import browserClient from '@/util/supabase/client';
 
 const MyPage = async () => {
   const supabase = createClient();
-  let { data, error } = await supabase.auth.signInWithPassword({
-    email: 'test12@test.com',
-    password: 'test12@test.com',
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  // console.log(user);
-  if (!user) return;
 
   const {
     data: { session },
   } = await supabase.auth.getSession();
-
+  console.log(session);
   if (!session) return;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // console.log(data);
+  if (!user) return;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3">
