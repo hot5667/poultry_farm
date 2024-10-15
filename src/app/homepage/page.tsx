@@ -49,6 +49,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-//페이지에는 css만 남기도록 수정하기!
-// 수정삭제는 디테일 페이지로 넘어가도록!
