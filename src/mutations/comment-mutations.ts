@@ -10,7 +10,7 @@ const addComment = async (comment: {
     .from('Comment')
     .insert({
       User_ID: comment.userId,
-      feed_ID: comment.feedID,
+      Feed_ID: comment.feedID,
       Comment_Content: comment.comment,
     })
     .select();
@@ -49,7 +49,6 @@ const updateComment = async (updateData: {
   comment: string;
   commentID: number;
 }) => {
-  console.log(updateData.comment, updateData.commentID);
   return await browserClient
     .from('Comment')
     .update({ Comment_Content: updateData.comment })
