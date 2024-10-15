@@ -55,15 +55,15 @@ const DdayList: React.FC<DdayListProps> = ({
 
   // Supabase에서 Challenge 데이터를 가져오는 함수
   const fetchChallenges = async () => {
-    const { data, error } = await supabase.from('Challenge2').select('*');
+    const { data, error } = await supabase.from('Challenge').select('*');
 
     if (error) {
       console.error(
-        'Challenge2 데이터를 불러오는 데 실패했습니다:',
+        'Challenge 데이터를 불러오는 데 실패했습니다:',
         error.message
       );
     } else {
-      console.log('Challenge2 데이터:', data);
+      console.log('Challenge 데이터:', data);
     }
   };
 
