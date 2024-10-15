@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 
 import DdayList from './_component/D-Day';
-import Timer from './_component/timer';
-import FocusOn from './_component/focusOn';
+import Timer from './_component/Timer';
+import FocusOn from './_component/FocusOn';
 
 const HomePage = () => {
   const [selectedDdayId, setSelectedDdayId] = useState<number | null>(null);
