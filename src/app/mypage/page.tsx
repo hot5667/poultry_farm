@@ -27,7 +27,7 @@ const MyPage = async () => {
       {/* 프로필 섹션 */}
       <section className="md:col-span-1 place-items-center md:mt-16">
         <div className="flex flex-col justify-center items-center">
-          <Profile user={user} session={session} />
+          {/* <Profile user={user} session={session} /> */}
         </div>
       </section>
 
@@ -37,9 +37,7 @@ const MyPage = async () => {
       </section>
 
       {/* 카드 섹션 */}
-      <section className="col-span-3">
-        <Card user={user} />
-      </section>
+      <section className="col-span-3">{/* <Card user={user} /> */}</section>
     </div>
   );
 };
