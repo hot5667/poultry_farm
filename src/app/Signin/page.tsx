@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import AuthPage from '../../components/autoAuthComponents'; // AuthPage 컴포넌트 임포트
+import AuthPage from '../../components/AuthForm'; // AuthPage 컴포넌트 임포트
 
 export const metadata: Metadata = {
   title: '로그인 페이지',
