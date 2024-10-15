@@ -15,7 +15,8 @@ const FocusOn = () => {
     if (e.key === 'Enter') {
       e.preventDefault();
       setSubmittedTask(task);
-      setTask('');
+      // setTask('');
+      setIsEditing(false);
     }
   };
 

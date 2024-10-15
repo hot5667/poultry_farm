@@ -5,7 +5,7 @@ import DdayList from './_component/D-Day';
 
 import Memo from './_component/Memo';
 import Timer from './_component/Timer';
-import FocusOn from './_component/FocusOn';
+import FocusOn from './_component/focusOn';
 
 const HomePage = () => {
   const [selectedDdayId, setSelectedDdayId] = useState<number | null>(null);
