@@ -12,6 +12,10 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        main: '#000000',
+        primary: '#72BF78', // 초록
+        soft: '#A0D683', //연두
+        accent: '#FEFF9F', //노랑
       },
     },
   },
