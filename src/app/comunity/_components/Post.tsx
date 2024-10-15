@@ -1,35 +1,24 @@
 'use client';
 
-import browserClient from '@/util/supabase/client';
-import { useQuery } from '@tanstack/react-query';
-import { feed } from '@/type/comunity';
+import Comment from './Comment';
 import { getComunityInfo } from '@/quries/useGetComunityQuery';
-
-const fetchPost = async (): Promise<feed[]> => {
-  const { data, error } = await browserClient
-    .from('feed')
-    .select(`*, User(*), Comment(*)`);
-  if (error) {
-    throw new Error();
-  } else {
-    return data;
-  }
-};
+import CommentButton from './CommentButton';
 
 const Post = () => {
-  const { data, isLoading, isError } = useQuery<feed[]>({
-    queryKey: ['post'],
-    queryFn: fetchPost,
-  });
+  const { data, isError } = getComunityInfo();
+  console.log(data);
+
+  if (!data) return <h2>데이터가 없습니다</h2>;
 
   if (isError) return <h2>데이터를 불러오지 못했습니다.</h2>;
 
+  console.log(data);
   return (
     <div>
       {data?.map((post) => (
         <div key={post.User_ID}>
-          <strong>{post.User.NickName}</strong>
-          <span>{post.User.User_Challenge}</span>
+          <strong>{post.User?.NickName}</strong>
+          <span>{post.User?.User_Challenge}</span>
           <p>{post.Category}</p>
           <p>{post.Feed_Content}</p>
           <ul>
@@ -37,10 +26,17 @@ const Post = () => {
             <li>종료날: {post.Challenge_end_progress}</li>
           </ul>
           {post.Comment.map((comment) => (
-            <div key={comment.User_ID}>
-              <p>{comment.Comment_Content}</p>
+            <div key={comment.Comment_ID}>
+              <div>
+                <p>{comment.Comment_Content}</p>
+              </div>
+              <CommentButton
+                id={comment.Comment_ID}
+                text={comment.Comment_Content}
+              />
             </div>
           ))}
+          <Comment feedID={post.User_feed_ID} />
         </div>
       ))}
     </div>
