@@ -1,16 +1,17 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+
 interface DdayItem {
-  id: number;
+  id: string;
   title: string;
   dday: number;
 }
 
 interface DdayListProps {
-  onSelectDday: (id: number) => void;
-  selectedDdayId: number | null;
-  ddayTimes: { [key: number]: number };
+  onSelectDday: (id: string) => void;
+  selectedDdayId: string | null;
+  ddayTimes: { [key: string]: number };
 }
 
 const DdayList: React.FC<DdayListProps> = ({
@@ -31,15 +32,49 @@ const DdayList: React.FC<DdayListProps> = ({
     return Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Supabase에서 새로운 D-day 항목을 추가하는 함수
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newItem = {
-      id: ddayList.length + 1,
-      title,
-      dday: calculateDday(date),
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    const newDday = {
+      Title: title,
+      Start_Date: new Date().toISOString(), // 시작 날짜를 현재 날짜로 설정합니다.
+      End_Date: date, // 사용자가 입력한 종료 날짜
+      Accumulated_Time: 0, // 누적 시간 초기값 설정
+      User_ID: user.id, // 현재 사용자 ID 추가
     };
-    setDdayList([...ddayList, newItem]);
-    onSelectDday(newItem.id);
+
+    // Supabase에 새로운 D-day 데이터 추가
+    const { data, error } = await supabase
+      .from('Challenge')
+      .insert(newDday)
+      .select();
+
+    if (error) {
+      console.error('D-day 추가에 실패했습니다:', error.message);
+      return;
+    }
+    if (data && Array.isArray(data) && data.length > 0) {
+      console.log('추가된 데이터:', data);
+
+      const newItem = {
+        id: data[0].Challenge_ID, // 데이터베이스에서 반환된 ID 사용
+        title: data[0].Title,
+        dday: calculateDday(data[0].End_Date),
+      };
+
+      setDdayList((prevList) => [...prevList, newItem]);
+      onSelectDday(data[0].Challenge_ID); // 추가된 D-day를 선택 상태로 업데이트
+    }
+
     setTitle('');
     setDate('');
     setFormVisible(false);
@@ -55,19 +90,40 @@ const DdayList: React.FC<DdayListProps> = ({
 
   // Supabase에서 Challenge 데이터를 가져오는 함수
   const fetchChallenges = async () => {
-    const { data, error } = await supabase.from('Challenge').select('*');
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('Challenge')
+      .select('*')
+      .eq('User_ID', user.id); // 현재 사용자 ID에 해당하는 데이터만 가져오기
 
     if (error) {
       console.error(
         'Challenge 데이터를 불러오는 데 실패했습니다:',
         error.message
       );
-    } else {
-      console.log('Challenge 데이터:', data);
+      return;
+    }
+
+    if (data) {
+      console.log('가져온 Challenge 데이터:', data);
+
+      const formattedData = data.map((item: any) => ({
+        id: item.Challenge_ID,
+        title: item.Title,
+        dday: calculateDday(item.End_Date),
+      }));
+      setDdayList(formattedData);
     }
   };
 
-  // 컴포넌트가 처음 렌더링될 때 Challenge 데이터를 불러옴
   useEffect(() => {
     fetchChallenges();
   }, []);
@@ -81,13 +137,11 @@ const DdayList: React.FC<DdayListProps> = ({
           <div
             key={item.id}
             onClick={() => onSelectDday(item.id)}
-            className={`flex flex-col items-start justify-between py-2 px-4 rounded-lg mb-2 w-40
-              ${
-                selectedDdayId === item.id
-                  ? 'bg-soft text-black '
-                  : 'border border-soft text-black'
-              }
-            `}
+            className={`flex flex-col items-start justify-between py-2 px-4 rounded-lg mb-2 w-40 ${
+              selectedDdayId === item.id
+                ? 'bg-soft text-black '
+                : 'border border-soft text-black'
+            }`}
           >
             <div>
               <span className="font-bold text-lg">D-{item.dday}</span>
@@ -124,10 +178,11 @@ const DdayList: React.FC<DdayListProps> = ({
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="border p-2 rounded mr-2"
+            className="border p-2 rounded mr-2 mb-3"
             min={new Date().toISOString().split('T')[0]}
             required
           />
+
           <button
             type="submit"
             className="p-2 rounded hover:text-soft transition-colors duration-300"
