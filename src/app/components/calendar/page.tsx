@@ -1,9 +1,15 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
-// import { createClient } from '@/util/supabase/server';
+import { createClient } from '@/util/supabase/client';
+import browserClient from '@/util/supabase/client';
+
+
+
+
+const supabase = createClient();
 
 
 //달력 날짜 객체 타입 지정
@@ -13,11 +19,12 @@ interface Day {
 }
 
 interface Event {
-  id: number;
+  Challenge_ID: number;
   startDate: string;
   endDate: string;
   title: string;
   memo: string;
+  user_id: number;
 }
 
 // DateRange 타입  reactDayPicker 에서 불러와짐 
@@ -44,30 +51,41 @@ const MyCalendar: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   // 수정 중인 일정의 ID
   const [editingEventId, setEditingEventId] = useState<number | null>(null); 
+ // 유저 아이디
+  const [user, setUser] = useState(null);
 
   const monthNames: string[] = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
 
 // =============================================================================
 //  supabase
-// const supabase = createClient();
+useEffect(() => {
+  const fetchEvents = async () => {
+    const { data, error } = await supabase.from('Challenge').select();
+    if (error) {
+      console.error('데이터를 가져오는데 문제가 있나봐용~:', error);
+    } else {
+      setEvents(data.map((item: any) => ({
+        Challenge_ID: item.Challenge_ID,
+        startDate: item.start_date,
+        endDate: item.end_date,
+        title: item.title,
+        memo: item.memo,
+        user_id: item.id,
+      })));
+    }
+  };
 
-// const addSb = async() => {
-//   if (!title || !memo) {
-//     alert("날짜, 제목, 내용중 입력되지 않은 값이 있습니다.")
-//     return
-//   } else {
-    
-// const { data, error } = await supabase
-// .from('Challenge')
-// .insert([{ title: title, memo: memo },])
-// .select()
-        
-// if(error) {
-//   console.log(error);
-// }
-//   }
-// }
-
+  const getUser = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error('Error fetching user:', error);
+    } else {
+      setUser(data.user); // 로그인한 유저 정보 저장
+    }
+  };
+  getUser();
+  fetchEvents();
+}, []);
 
 // ==========================================================================
   // 달력 데이터 생성 함수
@@ -124,7 +142,7 @@ const MyCalendar: React.FC = () => {
     setEditingEventId(eventId);
 
     if (isEdit && eventId !== null) {
-      const eventToEdit = events.find(event => event.id === eventId);
+      const eventToEdit = events.find(event => event.Challenge_ID === eventId);
       if (eventToEdit) {
         setTitle(eventToEdit.title);               // 제목
         setMemo(eventToEdit.memo);   // 설명
@@ -151,33 +169,40 @@ const MyCalendar: React.FC = () => {
   };
 
  // 일정 저장 (수정 또는 추가)
- const saveEvent = () => {
-  if (selectedRange?.from && selectedRange.to) {
-    // toISOString()  객체를 ISO 형식의 문자열로 변환. ex) "2024-10-15T00:00:00.000Z"
-    // split('T')[0]  T를 기준으로 나누고 첫번째부분 날짜만 선택 ex) " 2024-10-15 "
+ const saveEvent = async () => {
+  if (selectedRange?.from && selectedRange.to ) {
     const startDateStr = selectedRange.from.toISOString().split('T')[0];
     const endDateStr = new Date(selectedRange.to);
-    endDateStr.setDate(endDateStr.getDate() + 1); // 하루 +
+    endDateStr.setDate(endDateStr.getDate() + 1);  // 하루 추가
     const formattedEndDateStr = endDateStr.toISOString().split('T')[0];
 
     if (isEditing && editingEventId !== null) {
       // 기존 일정 수정
-      setEvents(events.map(event =>
-        event.id === editingEventId
-          ? { ...event, startDate: startDateStr, endDate: formattedEndDateStr, title, memo }
-          : event
-      ));
-    } else {
+      const { error } = await supabase
+        .from('Challenge')
+        .update({ start_date: startDateStr, end_date: formattedEndDateStr, title, memo })
+        .eq('Challenge_ID', editingEventId);
 
+      if (error) {
+        console.error('일정 수정 중 에러 발생:', error);
+      } else {
+        setEvents(events.map(event =>
+          event.Challenge_ID === editingEventId
+            ? { ...event, startDate: startDateStr, endDate: formattedEndDateStr, title, memo }
+            : event
+        ));
+      }
+    } else {
       // 새 일정 추가
-      const newEvent = {
-        id: events.length + 1, // 고유 ID
-        startDate: startDateStr,
-        endDate: formattedEndDateStr,
-        title,
-        memo,
-      };
-      setEvents([...events, newEvent]);
+      const { data, error } = await supabase
+        .from('Challenge')
+        .insert([{ start_date: startDateStr, end_date: formattedEndDateStr, title, memo, user_id: user }]);
+
+      if (error) {
+        console.error('일정 추가 중 에러 발생:', error);
+      } else if (data && data.length > 0) {
+        setEvents([...events, { Challenge_ID: data[0].Challenge_ID, startDate: startDateStr, endDate: formattedEndDateStr, title, memo, user_id }]);
+      }
     }
 
     closeModal();
@@ -185,13 +210,17 @@ const MyCalendar: React.FC = () => {
 };
 
 // 일정 삭제
-const deleteEvent = () => {
+const deleteEvent = async () => {
   if (editingEventId !== null) {
     const isConfirmed = window.confirm('정말 삭제하시겠습니까?');
     if (isConfirmed) {
-      // 삭제가 확인되면 해당 일정 삭제
-      setEvents(events.filter(event => event.id !== editingEventId));
-      closeModal();  // 모달 닫기
+      const { error } = await supabase.from('Challenge').delete().eq('Challenge_ID', editingEventId);
+      if (error) {
+        console.error('일정 삭제 중 에러 발생:', error);
+      } else {
+        setEvents(events.filter(event => event.Challenge_ID !== editingEventId));
+        closeModal();
+      }
     }
   }
 };
@@ -248,7 +277,7 @@ const isDateInRange = (date: Date, startDate: string, endDate: string): boolean 
                       <div 
                       
                       key={idx} 
-                      onClick={() => openModal(true, event.id)}  // 수정
+                      onClick={() => openModal(true, event.Challenge_ID)}  // 수정
                       className="p-1 mt-2 text-sm bg-blue-100 rounded"
                       >{event.title}
                       </div>
