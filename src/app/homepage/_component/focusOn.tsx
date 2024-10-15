@@ -8,6 +8,7 @@ const FocusOn = () => {
     quote: string;
     author: string;
   } | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   // 엔터입력
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -40,17 +41,23 @@ const FocusOn = () => {
         (닉네임)님, 오늘 가장 중요한 일은 뭔가요?
       </h1>
 
-      {!submittedTask && (
+      {(!submittedTask || isEditing) && (
         <input
           className="border-b p-2 w-64 text-center outline-none"
           value={task}
           onChange={(e) => setTask(e.target.value)}
           onKeyDown={handleKeyDown}
+          autoFocus
         />
       )}
 
-      {submittedTask && (
-        <div>
+      {submittedTask && !isEditing && (
+        <div
+          onClick={() => {
+            setIsEditing(true);
+            setTask(submittedTask);
+          }}
+        >
           <p className="text-4xl font-semibold">{submittedTask}</p>
         </div>
       )}
