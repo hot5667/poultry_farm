@@ -6,7 +6,9 @@ const DetailPage = () => {
   return (
     
     <>
+    <div className="p-[150px]">
     <MyCalendar />
+    </div>
     </>
   )
 }

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
 import { createClient } from '@/util/supabase/client';
-import browserClient from '@/util/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 
 
@@ -24,7 +24,7 @@ interface Event {
   endDate: string;
   title: string;
   memo: string;
-  user_id: number;
+  User_ID: number;
 }
 
 // DateRange 타입  reactDayPicker 에서 불러와짐 
@@ -51,11 +51,11 @@ const MyCalendar: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   // 수정 중인 일정의 ID
   const [editingEventId, setEditingEventId] = useState<number | null>(null); 
- // 유저 아이디
-  const [user, setUser] = useState(null);
+  
 
   const monthNames: string[] = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
 
+  
 // =============================================================================
 //  supabase
 useEffect(() => {
@@ -66,24 +66,15 @@ useEffect(() => {
     } else {
       setEvents(data.map((item: any) => ({
         Challenge_ID: item.Challenge_ID,
-        startDate: item.start_date,
-        endDate: item.end_date,
+        startDate: item.Start_Date,
+        endDate: item.End_Date,
         title: item.title,
         memo: item.memo,
-        user_id: item.id,
+        User_ID: item.User_ID,
       })));
+      
     }
   };
-
-  const getUser = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      console.error('Error fetching user:', error);
-    } else {
-      setUser(data.user); // 로그인한 유저 정보 저장
-    }
-  };
-  getUser();
   fetchEvents();
 }, []);
 
@@ -170,7 +161,7 @@ useEffect(() => {
 
  // 일정 저장 (수정 또는 추가)
  const saveEvent = async () => {
-  if (selectedRange?.from && selectedRange.to ) {
+  if (selectedRange?.from && selectedRange.to) {
     const startDateStr = selectedRange.from.toISOString().split('T')[0];
     const endDateStr = new Date(selectedRange.to);
     endDateStr.setDate(endDateStr.getDate() + 1);  // 하루 추가
@@ -194,20 +185,25 @@ useEffect(() => {
       }
     } else {
       // 새 일정 추가
-      const { data, error } = await supabase
+      const { data: challenge, error } = await supabase
         .from('Challenge')
-        .insert([{ start_date: startDateStr, end_date: formattedEndDateStr, title, memo, user_id: user }]);
+        .insert([{ start_date: startDateStr, end_date: formattedEndDateStr, title, memo, user_id: events[0]?.User_ID }])
+        .select()
 
       if (error) {
         console.error('일정 추가 중 에러 발생:', error);
-      } else if (data && data.length > 0) {
-        setEvents([...events, { Challenge_ID: data[0].Challenge_ID, startDate: startDateStr, endDate: formattedEndDateStr, title, memo, user_id }]);
+      } else if (challenge && challenge.length > 0) {
+        setEvents([...events, { Challenge_ID: challenge[0].Challenge_ID, startDate: startDateStr, endDate: formattedEndDateStr, title, memo, User_ID: challenge[0].User.ID }]);
+     
       }
+      
     }
+    
 
     closeModal();
   }
 };
+
 
 // 일정 삭제
 const deleteEvent = async () => {
