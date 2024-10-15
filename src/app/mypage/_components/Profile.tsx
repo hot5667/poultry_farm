@@ -3,8 +3,8 @@ import browserClient from '@/util/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import React, { useState } from 'react';
 import UploadImage from './UploadImage';
+import { useNicknameStore } from '@/store/usenicknamestore';
 
 interface ProfileProps {
   user: User;
@@ -12,9 +12,10 @@ interface ProfileProps {
 }
 
 const Profile = ({ user, session }: ProfileProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [nickname, setNickname] = useState('');
   const queryClient = useQueryClient();
+  // 주스탠드 스토어에서 상태 가져오기
+  const { nickname, isEditing, setNickname, toggleEditing } =
+    useNicknameStore();
 
   // User 테이블 데이터 가져오기
   const {
@@ -46,8 +47,8 @@ const Profile = ({ user, session }: ProfileProps) => {
     if (error) {
       throw new Error(`닉네임 수정 오류: ${error.message}`);
     }
-    setNickname(newNickname);
-    setIsEditing(false);
+    setNickname(newNickname); // 주스탠드 스토어에서 닉네임 업데이트
+    toggleEditing(); // 닉네임 수정 모드 토글
   };
 
   const { mutate } = useMutation({
@@ -59,18 +60,13 @@ const Profile = ({ user, session }: ProfileProps) => {
     },
   });
 
-  // 닉네임 수정 form 토글
-  const handleToggleEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(nickname);
   };
 
   return (
-    <div className="w-[200px] h-auto p-2 md:ml-7">
+    <div className="w-[200px] h-auto p-2">
       {isEditing ? (
         <UploadImage
           uid={user.id}
@@ -114,7 +110,7 @@ const Profile = ({ user, session }: ProfileProps) => {
                 저장
               </button>
               <button
-                onClick={handleToggleEdit}
+                onClick={toggleEditing}
                 type="button"
                 className="p-1 text-sm border border-gray-500"
               >
@@ -124,7 +120,7 @@ const Profile = ({ user, session }: ProfileProps) => {
           </form>
         ) : (
           <button
-            onClick={handleToggleEdit}
+            onClick={toggleEditing}
             className="p-2 border border-gray-500"
           >
             수정
