@@ -10,13 +10,11 @@ const MyPage = async () => {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  console.log(session);
   if (!session) return;
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  // console.log(data);
   if (!user) return;
 
   return (
