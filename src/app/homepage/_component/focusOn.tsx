@@ -23,18 +23,18 @@ const FocusOn = () => {
   };
 
   const fetchNickname = async () => {
-    // 현재 로그인한 유저의 ID 가져오기
+    // 로그인한 유저ID 가져오기
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError)
       throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
 
-    const userId = userData?.user?.id; // 현재 로그인된 유저 ID
+    const userId = userData?.user?.id;
     if (userId) {
-      // User 테이블에서 UserID가 일치하는 닉네임 검색
+      // User테이블에서 UserID가 일치하는 닉네임 검색
       const { data, error } = await supabase
         .from('User')
         .select('NickName')
-        .eq('UserID', userId) // User 테이블에서 UserID 일치하는지 확인
+        .eq('UserID', userId)
         .single();
 
       if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');

@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 interface DdayItem {
   id: number;
   title: string;
@@ -52,6 +52,25 @@ const DdayList: React.FC<DdayListProps> = ({
     const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
+
+  // Supabase에서 Challenge 데이터를 가져오는 함수
+  const fetchChallenges = async () => {
+    const { data, error } = await supabase.from('Challenge2').select('*');
+
+    if (error) {
+      console.error(
+        'Challenge2 데이터를 불러오는 데 실패했습니다:',
+        error.message
+      );
+    } else {
+      console.log('Challenge2 데이터:', data);
+    }
+  };
+
+  // 컴포넌트가 처음 렌더링될 때 Challenge 데이터를 불러옴
+  useEffect(() => {
+    fetchChallenges();
+  }, []);
 
   return (
     <div className="m-10">
