@@ -42,7 +42,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
         } else {
             if (type === 'signup') {
                 setMessage('회원가입 성공! 확인 이메일을 확인해주세요.');
-                router.push(`/signup/${email}/AdditionalInfo`);
+                router.push(`/signup/${email}/AdditionalInfo/page.tsx`);
             } else {
                 setMessage('로그인 성공! 메인페이지로 이동합니다.');
                 router.push('/');
