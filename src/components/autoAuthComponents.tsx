@@ -28,7 +28,7 @@ const AuthPage = ({ type }: AuthPageProps) => {
 
           let authResponse: AuthResponse;
 
-          if (type == 'signup') {
+          if (type == 'signup') { // 객체로 합치고 타입 의 기반으로 보이도록
                authResponse = await supabase.auth.signUp({ email, password });
           } else {
                authResponse = await supabase.auth.signInWithPassword({ email, password });
