@@ -20,7 +20,7 @@ const MyPage = async () => {
   return (
     <div className="flex flex-col justify-center items-center">
       {/* 프로필 섹션 */}
-      <section className="flex flex-col items-center md:w-1/3 md:mt-16">
+      <section className="flex flex-col items-center mt-56 md:w-1/3 md:mt-40">
         <Profile user={user} session={session} />
       </section>
 

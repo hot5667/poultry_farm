@@ -15,10 +15,10 @@ const Card = ({ user }: CardProps) => {
   if (isLoading) return <div className="text-center">Loading...</div>;
   if (isError) return <div>Error</div>;
 
-  const progressData = challengeData?.map((data) => ({
-    ...data,
-    progress: calculateProgress(data),
-  }));
+  // const progressData = challengeData?.map((data) => ({
+  //   ...data,
+  //   progress: calculateProgress(data),
+  // }));
 
   const dDay = (endProgress: string) => {
     const targetDate = endProgress; // 종료일
@@ -30,7 +30,7 @@ const Card = ({ user }: CardProps) => {
   // console.log(challengeData);
   return (
     <div className="w-72 mx-auto">
-      <div className="flex flex-row gap-10 justify-center items-center">
+      <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
         {challengeData && challengeData.length > 0 ? (
           challengeData.map((data) => {
             const progress = calculateProgress(data); // 각 카드마다 개별적으로 진행률 계산
