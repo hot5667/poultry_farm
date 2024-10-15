@@ -68,11 +68,15 @@ const Profile = ({ user, session }: ProfileProps) => {
     e.preventDefault();
     mutate(nickname);
   };
-  console.log(userInfo);
+
   return (
     <div className="w-[200px] h-auto p-2 md:ml-7">
       {isEditing ? (
-        <UploadImage uid={user.id} currentUserImage={userInfo?.UserImage} />
+        <UploadImage
+          uid={user.id}
+          currentUserImage={userInfo?.UserImage}
+          session={session}
+        />
       ) : (
         <Image
           src={userInfo?.UserImage || '/assets/default-profile.jpg'}
