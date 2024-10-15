@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 잔디 채우기 색상 */
+.react-calendar-heatmap .color-empty {
+  fill: #eeeeee; /* 빈 칸 색상 */
+}
+
+.react-calendar-heatmap .color-scale-0 {
+  fill: #eeeeee; /* 0 count */
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: #d3ee98; /* 1 count */
+}
+
+.react-calendar-heatmap .color-scale-2 {
+  fill: #a0d683; /* 2 count */
+}
+
+.react-calendar-heatmap .color-scale-3 {
+  fill: #72bf78; /* 3 count */
+}
+
+.react-calendar-heatmap-month-labels {
+  font-size: 8px;
+}
+.react-calendar-heatmap-weekday-label {
+  font-size: 8px;
+}
