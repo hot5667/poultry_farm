@@ -1,4 +1,6 @@
-import { feed } from '@/type/comunity';
+'use client';
+
+import { comment, feed } from '@/type/comunity';
 import browserClient from '@/util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 

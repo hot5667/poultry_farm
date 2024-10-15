@@ -1,37 +1,53 @@
 'use client';
 
 import { useAddMutation } from '@/mutations/comment-mutations';
-import browserClient from '@/util/supabase/client';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { getCommentQuery } from '@/quries/useGetCommentQuery';
+import { getCommentUserInfo } from '@/quries/useGetCommentUserQuery';
+import { SetStateAction, useState } from 'react';
 
-const fetchSession = async () => {
-  const { data, error } = await browserClient.from('Comment').select('*');
+interface id {
+  feedID: string;
+}
 
-  return data;
-};
-
-const Comment = () => {
-  const [isLogin, useLogin] = useState();
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['Comment'],
-    queryFn: fetchSession,
-  });
+const Comment = ({ feedID }: id) => {
+  const [isLogin, setLogin] = useState();
+  const [comment, setComment] = useState<string>('');
+  const { data, isLoading, isError } = getCommentQuery();
+  const { data: user } = getCommentUserInfo();
 
   const { mutate } = useAddMutation();
 
-  console.log(data);
+  const handleComment = (e: { target: { value: SetStateAction<string> } }) => {
+    setComment(e.target.value);
+  };
+
+  // console.log(data);
+  // console.log('////');
+  // console.log(user);
+
+  if (!data || !user) return <h2>데이터가 없습니다.</h2>;
+
+  if (isError) return <h2>데이터를 불러오지 못했습니다.</h2>;
 
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          mutate();
+          mutate({
+            userId: user.id,
+            feedID: feedID,
+            comment: comment,
+          });
         }}
       >
-        {!isLogin ? null : <button>추가하기</button>};
+        <input
+          className="border"
+          type="text"
+          value={comment}
+          onChange={handleComment}
+        />
+        {isLogin ? null : <button type="submit">추가하기</button>}
       </form>
     </div>
   );
