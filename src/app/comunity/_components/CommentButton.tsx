@@ -6,7 +6,6 @@ import {
 } from '@/mutations/comment-mutations';
 import { getCommentUserInfo } from '@/quries/useGetCommentUserQuery';
 import { SetStateAction, useState } from 'react';
-// import Cookies from 'js-cookie';
 
 interface data {
   id: number;
@@ -15,8 +14,6 @@ interface data {
 
 const CommentButton = ({ id, userID }: data) => {
   const [comment, setComment] = useState('');
-  // const cookiestore = Cookies;
-  // const cookie = cookiestore.get('sb-ipybojcftcgitunzyror-auth-token');
   const { data } = getCommentUserInfo();
 
   const loginUserID = data?.id;
@@ -26,6 +23,12 @@ const CommentButton = ({ id, userID }: data) => {
   };
   const { mutate: delet } = useDeleteMutation();
   const { mutate: update } = useUpdateMutation();
+  const handleDelete = (id: number) => {
+    const confirmDelete = window.confirm('삭제하시겠습니까?');
+    if (confirmDelete) {
+      delet({ commentID: id });
+    }
+  };
 
   if (!data) return;
 
@@ -33,11 +36,11 @@ const CommentButton = ({ id, userID }: data) => {
     <div>
       {userID === loginUserID ? (
         <>
-          <button onClick={() => delet({ commentID: id })}>삭제</button>
+          <button onClick={() => handleDelete(id)}>삭제</button>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log(id, comment);
+              setComment('');
               update({
                 commentID: id,
                 comment: comment,

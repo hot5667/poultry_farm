@@ -31,6 +31,7 @@ const Comment = ({ feedID }: id) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setComment('');
           mutate({
             userId: user.id,
             feedID: feedID,
