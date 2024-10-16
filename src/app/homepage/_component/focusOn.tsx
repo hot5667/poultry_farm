@@ -133,7 +133,7 @@ const FocusOn = () => {
       )}
 
       {randomQuote && (
-        <p className="text-gray-200 text-sm absolute bottom-10 w-full text-center">
+        <p className="text-gray-500 text-sm absolute bottom-10 w-full text-center">
           "{randomQuote.quote}" - {randomQuote.author}
         </p>
       )}

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import ReactQueryProvider from '../util/ReactQueryProvider';
 import NavLink from '../components/NavLink';
@@ -11,13 +13,13 @@ const Navbar = () => {
   useEffect(() => {
     const token = Cookies.get('token');
     if (token) {
-      login();  // 쿠키가 있으면 로그인 상태로 전환
+      login(); // 쿠키가 있으면 로그인 상태로 전환
     }
   }, [login]);
 
   const handleLogout = () => {
-    Cookies.remove('token');  // 쿠키 삭제
-    logout();  // 상태 변경
+    Cookies.remove('token'); // 쿠키 삭제
+    logout(); // 상태 변경
   };
 
   return (
@@ -27,7 +29,7 @@ const Navbar = () => {
           <h1 className="text-2xl font-bold text-black">양계장</h1>
         </div>
         <ul className="flex items-center space-x-8">
-          <NavLink href="/homepage">홈</NavLink>
+          <NavLink href="/">홈</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>
@@ -35,7 +37,9 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           {isLoggedIn ? (
             <>
-              <button onClick={handleLogout} className="nav-link">로그아웃</button>
+              <button onClick={handleLogout} className="nav-link">
+                로그아웃
+              </button>
             </>
           ) : (
             <NavLink href="/login">로그인</NavLink>
