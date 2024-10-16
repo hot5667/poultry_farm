@@ -3,8 +3,8 @@ import browserClient from '@/util/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import React, { useState } from 'react';
 import UploadImage from './UploadImage';
+import { useNicknameStore } from '@/store/useNicknameStore';
 
 interface ProfileProps {
   user: User;
@@ -12,9 +12,10 @@ interface ProfileProps {
 }
 
 const Profile = ({ user, session }: ProfileProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [nickname, setNickname] = useState('');
   const queryClient = useQueryClient();
+  // 주스탠드 스토어에서 상태 가져오기
+  const { nickname, isEditing, setNickname, toggleEditing } =
+    useNicknameStore();
 
   // User 테이블 데이터 가져오기
   const {
@@ -46,8 +47,8 @@ const Profile = ({ user, session }: ProfileProps) => {
     if (error) {
       throw new Error(`닉네임 수정 오류: ${error.message}`);
     }
-    setNickname(newNickname);
-    setIsEditing(false);
+    setNickname(newNickname); // 주스탠드 스토어에서 닉네임 업데이트
+    toggleEditing(); // 닉네임 수정 모드 토글
   };
 
   const { mutate } = useMutation({
@@ -59,20 +60,19 @@ const Profile = ({ user, session }: ProfileProps) => {
     },
   });
 
-  // 닉네임 수정 form 토글
-  const handleToggleEdit = () => {
-    setIsEditing((prev) => !prev);
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate(nickname);
   };
-  console.log(userInfo);
+
   return (
-    <div className="w-[200px] h-auto p-2 md:ml-7">
+    <div className="w-72 flex flex-col justify-center items-center h-auto p-4 rounded-lg shadow-md bg-white mb-10">
       {isEditing ? (
-        <UploadImage uid={user.id} currentUserImage={userInfo.UserImage} />
+        <UploadImage
+          uid={user.id}
+          currentUserImage={userInfo?.UserImage}
+          session={session}
+        />
       ) : (
         <Image
           src={userInfo?.UserImage || '/assets/default-profile.jpg'}
@@ -95,26 +95,32 @@ const Profile = ({ user, session }: ProfileProps) => {
         {isEditing ? (
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <input
-              className="border border-gray-500 mb-2"
+              className="w-48 p-1 underline underline-offset-2 mb-2 placeholder:text-sm text-gray-500 focus:outline-none"
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="새로운 닉네임을 입력하세요"
             />
-            <button type="submit" className="p-2 border border-gray-500 mb-2">
-              저장
-            </button>
-            <button
-              onClick={handleToggleEdit}
-              type="button"
-              className="p-2 border border-gray-500"
-            >
-              취소
-            </button>
+
+            <div className="flex flex-row justify-center items-center gap-1">
+              <button
+                type="submit"
+                className="p-1 text-sm border border-gray-500"
+              >
+                저장
+              </button>
+              <button
+                onClick={toggleEditing}
+                type="button"
+                className="p-1 text-sm border border-gray-500"
+              >
+                취소
+              </button>
+            </div>
           </form>
         ) : (
           <button
-            onClick={handleToggleEdit}
+            onClick={toggleEditing}
             className="p-2 border border-gray-500"
           >
             수정

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ReactQueryProvider from '../util/ReactQueryProvider';
-import  NavLink from '../components/NavLink'
 import './globals.css';
+import NavLink from '../components/NavLink';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,13 +16,13 @@ const Navbar = () => {
           <h1 className="text-2xl font-bold text-black">양계장</h1>
         </div>
         <ul className="flex items-center space-x-8">
-          <NavLink href="/">홈</NavLink>
+          <NavLink href="/homepage">홈</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          <NavLink href="/mypage">마이페이지</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
         </ul>
@@ -31,19 +31,17 @@ const Navbar = () => {
   );
 };
 
-export default function RootLayout({ children, }:
-  Readonly<{
+export default function RootLayout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="ko">
-    <body>
-    <Navbar/>
-    <ReactQueryProvider>{children}</ReactQueryProvider>
-    </body>
+      <body>
+        <Navbar />
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+      </body>
     </html>
   );
 }
-
-
-
