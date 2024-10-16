@@ -1,10 +1,18 @@
 import browserClient from '@/util/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const addComment = async (userId: string, feedID: number, comment: string) => {
+const addComment = async (comment: {
+  userId: string;
+  feedID: string;
+  comment: string;
+}) => {
   return await browserClient
     .from('Comment')
-    .insert({ User_ID: userId, Comment_Content: comment, feed_ID: feedID })
+    .insert({
+      User_ID: comment.userId,
+      Feed_ID: comment.feedID,
+      Comment_Content: comment.comment,
+    })
     .select();
 };
 
@@ -12,42 +20,48 @@ export const useAddMutation = () => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => addComment,
+    mutationFn: addComment,
     onSuccess: async () => {
-      client.invalidateQueries({ queryKey: ['Comment'] });
+      client.invalidateQueries({ queryKey: ['post'] });
     },
   });
 };
 
-const deleteComment = async (commentId: number) => {
-  return await browserClient.from('Comment').delete().eq('User_ID', commentId);
+const deleteComment = async (commentID: { commentID: number }) => {
+  return await browserClient
+    .from('Comment')
+    .delete()
+    .eq('Comment_ID', commentID.commentID);
 };
 
 export const useDeleteMutation = () => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => deleteComment,
+    mutationFn: deleteComment,
     onSuccess: async () => {
-      client.invalidateQueries({ queryKey: ['Comment'] });
+      client.invalidateQueries({ queryKey: ['post'] });
     },
   });
 };
 
-const updateComment = async (commentId: number, comment: string) => {
+const updateComment = async (updateData: {
+  comment: string;
+  commentID: number;
+}) => {
   return await browserClient
     .from('Comment')
-    .update({ Comment_Content: comment })
-    .eq('User_ID', commentId);
+    .update({ Comment_Content: updateData.comment })
+    .eq('Comment_ID', updateData.commentID);
 };
 
 export const useUpdateMutation = () => {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => await updateComment,
+    mutationFn: updateComment,
     onSuccess: async () => {
-      client.invalidateQueries({ queryKey: ['Comment'] });
+      client.invalidateQueries({ queryKey: ['post'] });
     },
   });
 };

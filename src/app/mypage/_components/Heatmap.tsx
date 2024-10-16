@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import CalendarHeatmap, {
   ReactCalendarHeatmapValue,
 } from 'react-calendar-heatmap';
+import '../../style/heatmap-style.css';
 
 const Heatmap = () => {
   const today = new Date();
