@@ -38,7 +38,8 @@ const HomePage = () => {
     const { data, error } = await supabase
       .from('Challenge')
       .select('*')
-      .eq('User_ID', user.id);
+      .eq('User_ID', user.id)
+      .order('User_ID', { ascending: true });
 
     if (error) {
       console.error(
