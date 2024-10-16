@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import  browserClient  from '@/util/supabase/client';
+import browserClient from '@/util/supabase/client';
 import { DdayItem } from '@/components/Main';
 
 interface DdayListProps {
