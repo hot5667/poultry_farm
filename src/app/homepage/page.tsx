@@ -4,8 +4,9 @@ import React from 'react';
 import DdayList from './_component/D-Day';
 import Memo from './_component/Memo';
 import FocusOn from './_component/FocusOn';
-import Timer from './_component/Timer';
+
 import DdayController from './_component/DdayController';
+import Timer from './_component/timer';
 
 const HomePage = () => {
   return (
