@@ -65,6 +65,21 @@ const Profile = ({ user, session }: ProfileProps) => {
     mutate(nickname);
   };
 
+  // 로딩 중 상태 표시
+  if (userInfoIsLoading) {
+    return (
+      <div className="w-72 flex flex-col justify-center items-center h-auto p-4 rounded-lg shadow-md bg-white mb-10">
+        <Image
+          src="/assets/default-profile.jpg"
+          width={200}
+          height={200}
+          alt="기본 이미지"
+        />
+        <p>로딩 중...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-72 flex flex-col justify-center items-center h-auto p-4 rounded-lg shadow-md bg-white mb-10">
       {isEditing ? (
@@ -84,18 +99,18 @@ const Profile = ({ user, session }: ProfileProps) => {
       <div className="flex flex-col items-center">
         <div className="flex flex-row items-baseline justify-center mt-2">
           <h2 className="font-black text-2xl md:text-3xl">
-            <p>{userInfo?.NickName}</p>
+            <p>{userInfo?.NickName ? userInfo.NickName : user.email}</p>
           </h2>
           <span>님,</span>
         </div>
 
         <p className="mt-1">오늘도 화이팅!</p>
-        <p className="text-gray-300 font-medium">{user.email}</p>
+        <p className="p-1 text-gray-300 font-medium">{user.email}</p>
 
         {isEditing ? (
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <input
-              className="w-48 p-1 underline underline-offset-2 mb-2 placeholder:text-sm text-gray-500 focus:outline-none"
+              className="text-center w-48 p-1 underline underline-offset-2 mb-2 placeholder:text-sm text-gray-500 focus:outline-none"
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
@@ -121,7 +136,7 @@ const Profile = ({ user, session }: ProfileProps) => {
         ) : (
           <button
             onClick={toggleEditing}
-            className="p-2 border border-gray-500"
+            className="p-1 text-sm border border-gray-500"
           >
             수정
           </button>
