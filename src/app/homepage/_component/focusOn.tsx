@@ -12,35 +12,54 @@ const FocusOn = () => {
   } | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // 엔터입력
+  // 로컬 스토리지에서 값을 로드하는 함수
+  const loadFromLocalStorage = (key: string) => {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  };
+
+  // 로컬 스토리지에 값을 저장하는 함수
+  const saveToLocalStorage = (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  // 엔터 입력 처리
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       setSubmittedTask(task);
-      // setTask('');
       setIsEditing(false);
+      saveToLocalStorage('submittedTask', task);
     }
   };
 
   const fetchNickname = async () => {
-    // 로그인한 유저ID 가져오기
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError)
-      throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
+    try {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      if (userError)
+        throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
 
-    const userId = userData?.user?.id;
-    if (userId) {
-      // User테이블에서 UserID가 일치하는 닉네임 검색
-      const { data, error } = await supabase
-        .from('User')
-        .select('NickName')
-        .eq('UserID', userId)
-        .single();
+      const userId = userData?.user?.id;
+      if (userId) {
+        const { data, error } = await supabase
+          .from('User')
+          .select('NickName')
+          .eq('UserID', userId)
+          .single();
 
-      if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
-      return data?.NickName || '';
+        if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
+        return data?.NickName || 'guest';
+      }
+      throw new Error('로그인된 사용자가 없습니다');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error('알 수 없는 오류 발생', error);
+      }
+      return 'guest';
     }
-    throw new Error('로그인된 사용자가 없습니다');
   };
 
   // useQuery를 사용하여 닉네임 데이터를 가져옴
@@ -63,8 +82,26 @@ const FocusOn = () => {
 
   useEffect(() => {
     fetchRandomQuote();
-    fetchNickname();
   }, []);
+
+  // 컴포넌트가 마운트될 때 로컬 스토리지에서 로드
+  useEffect(() => {
+    const savedTask = loadFromLocalStorage('task');
+    const savedSubmittedTask = loadFromLocalStorage('submittedTask');
+
+    if (savedTask) {
+      setTask(savedTask);
+    }
+
+    if (savedSubmittedTask) {
+      setSubmittedTask(savedSubmittedTask);
+    }
+  }, []);
+
+  // task 상태가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    saveToLocalStorage('task', task);
+  }, [task]);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
