@@ -23,7 +23,7 @@ const HomePage = () => {
             <div className="w-2/4 flex flex-col items-center mt-10">
               <Timer
                 selectedDdayId={selectedDdayId}
-                handleSelectDday={handleSelectDday} // handleSelectDday 함수를 전달
+                handleSelectDday={handleSelectDday}
                 onTimeUpdate={handleTimeUpdate}
               />
               <FocusOn />
