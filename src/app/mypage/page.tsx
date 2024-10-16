@@ -2,8 +2,8 @@ import { createClient } from '@/util/supabase/server';
 import Card from './_components/Card';
 import Heatmap from './_components/Heatmap';
 import Profile from './_components/Profile';
-import browserClient from '@/util/supabase/client';
 import { Metadata } from 'next';
+import { redirect, useRouter } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: '마이 페이지',
@@ -12,11 +12,12 @@ export const metadata: Metadata = {
 
 const MyPage = async () => {
   const supabase = createClient();
-
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  if (!session) return;
+  if (!session) {
+    redirect('/Signin');
+  }
 
   const {
     data: { user },
