@@ -13,17 +13,19 @@ const Navbar = () => {
   useEffect(() => {
     const token = Cookies.get('sb-ipybojcftcgitunzyror-auth-token');
     if (token) {
-      login();  // 쿠키가 있으면 로그인 상태로 전환
+      login(); 
+    } else {
+      logout(); 
     }
-  }, [login]);
+  }, [login, logout]);
 
   const handleLogout = () => {
-    Cookies.remove('sb-ipybojcftcgitunzyror-auth-token');  // 쿠키 삭제
-    logout();  // 상태 변경
+    Cookies.remove('sb-ipybojcftcgitunzyror-auth-token');  
+    logout();  
   };
 
   return (
-    <nav className="fixed z-10 w-full p-4 bg-white shadow-lg ">
+    <nav className="fixed z-10 w-full p-4 bg-white shadow-lg">
       <div className="container flex items-center justify-between mx-auto">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-black">양계장</h1>

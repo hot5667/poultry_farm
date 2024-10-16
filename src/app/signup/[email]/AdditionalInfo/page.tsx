@@ -3,31 +3,65 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useInputStore } from '../../../../store/inputstore';
+import browserClient from '../../../../util/supabase/client';
 
 interface AdditionalInfoProps {
   params: {
-    email: string;
+    uuid: string;
   };
 }
 
 const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
-  const { email } = params;
+  const { uuid } = params;
   const router = useRouter();
 
-  const nickname = useInputStore(state => state.nickname);
-  const introduction = useInputStore(state => state.introduction);
-  const setNickname = useInputStore(state => state.setNickname);
-  const setIntroduction = useInputStore(state => state.setIntroduction);
-  const error = useInputStore(state => state.error);
-  const setError = useInputStore(state => state.setError);
+  const nickname = useInputStore((state) => state.nickname);
+  const introduction = useInputStore((state) => state.introduction);
+  const setNickname = useInputStore((state) => state.setNickname);
+  const setIntroduction = useInputStore((state) => state.setIntroduction);
+  const error = useInputStore((state) => state.error);
+  const setError = useInputStore((state) => state.setError);
 
   useEffect(() => {
-    if (!email || typeof email !== 'string') {
-      router.push('/signup');
-    }
-  }, [email, router]);
+    const getUser = async () => {
+      try {
+        const { data: { user }, error } = await browserClient.auth.getUser();
+        
+        if (error) {
+          throw error;
+        }
 
-  const handleSubmit = (e: React.FormEvent) => {
+        if (!user) {
+          router.push('/signup');
+          return;
+        }
+
+        const { data: userData, error: userError } = await browserClient
+          .from('User')
+          .select('NickName, User_Introduction')
+          .eq('UserID', user.id)
+          .single();
+
+        if (userError) {
+          throw userError;
+        }
+
+        // 기존 데이터가 있다면 폼에 설정
+        if (userData) {
+          setNickname(userData.NickName);
+          setIntroduction(userData.User_Introduction || '');
+        }
+
+      } catch (error) {
+        console.error('유저 정보 가져오기 실패:', error);
+        setError('유저 정보를 가져오는데 실패했습니다.');
+      }
+    };
+
+    getUser();
+  }, [router, setNickname, setIntroduction, setError]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!nickname) {
@@ -35,11 +69,36 @@ const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
       return;
     }
 
-    console.log('이메일:', email);
-    console.log('닉네임:', nickname);
-    console.log('한줄 소개:', introduction || '한줄 소개 없음');
-    
-    router.push('/');
+    try {
+      const { data: { user }, error: authError } = await browserClient.auth.getUser();
+      
+      if (authError) throw authError;
+      if (!user) throw new Error('유저 정보를 찾을 수 없습니다.');
+
+      const { error } = await browserClient
+        .from('User')
+        .upsert([
+          { 
+            UserID: user.id, 
+            NickName: nickname, 
+            User_Introduction: introduction || null 
+          }
+        ], 
+        { onConflict: 'UserID' });
+
+      if (error) throw error;
+
+      console.log('UserID:', user.id);
+      console.log('닉네임:', nickname);
+      console.log('한줄 소개:', introduction || '한줄 소개 없음');
+
+      // 성공 시 다음 페이지로 이동하거나 성공 메시지 표시
+      router.push('/'); // 또는 다른 페이지로 이동
+
+    } catch (error) {
+      console.error('데이터 저장 중 오류 발생:', error);
+      setError('데이터 저장 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -67,7 +126,7 @@ const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
           />
         </label>
 
-        {error && <p className="text-red-500">{error}</p>} 
+        {error && <p className="text-red-500">{error}</p>}
         
         <button
           type="submit"
