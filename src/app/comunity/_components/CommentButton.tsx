@@ -9,9 +9,10 @@ import { SetStateAction, useState } from 'react';
 import Button from './Button';
 import { commentButton } from '@/type/comunity';
 
-const CommentButton = ({ id, userID }: commentButton) => {
-  const [comment, setComment] = useState('');
+const CommentButton = ({ id, userID, comentContent }: commentButton) => {
   const { data } = getCommentUserInfo();
+  const [comment, setComment] = useState(comentContent);
+  const [isUpdate, setUpdate] = useState(false);
   const { mutate: deleteComment } = useDeleteMutation();
   const { mutate: updateComment } = useUpdateMutation();
   const loginUserId = data?.id;
@@ -27,30 +28,50 @@ const CommentButton = ({ id, userID }: commentButton) => {
     }
   };
 
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (comment === '') {
+      alert('내용을 입력해주세요~');
+      return;
+    } else {
+      updateComment({
+        commentID: id,
+        comment: comment,
+      });
+      setComment('');
+      setUpdate(false);
+    }
+  };
+
   if (!data) return;
 
   return (
     <div className="flex">
       {userID === loginUserId ? (
         <>
-          <Button onClick={() => handleDelete(id)}>삭제</Button>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setComment('');
-              updateComment({
-                commentID: id,
-                comment: comment,
-              });
-            }}
-          >
-            <input
-              className="btn w-[100px] p-[4px]"
-              type="text"
-              value={comment}
-              onChange={handleUpdate}
-            />
-            <Button type="submit">수정하기</Button>
+          <Button className="p-1" onClick={() => handleDelete(id)}>
+            삭제
+          </Button>
+          <form onSubmit={handleSubmit}>
+            {isUpdate ? (
+              <>
+                <input
+                  className="input btn w-[100px] p-[4px]"
+                  type="text"
+                  value={comment}
+                  onChange={handleUpdate}
+                />
+                <Button type="submit">수정하기</Button>
+              </>
+            ) : (
+              <Button
+                type="button"
+                className="p-1 ml-[8px]"
+                onClick={() => setUpdate(true)}
+              >
+                수정
+              </Button>
+            )}
           </form>
         </>
       ) : null}
