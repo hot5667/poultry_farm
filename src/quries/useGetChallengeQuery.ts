@@ -1,5 +1,5 @@
-import { Challenge } from '@/type/challenge';
-import browserClient from '@/util/supabase/client';
+import { Challenge } from '../type/challenge';
+import browserClient from '../util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
 export const fetchChallenge = async (userId: string): Promise<Challenge[]> => {

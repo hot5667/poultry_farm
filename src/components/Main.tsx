@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
-import DdayController from '@/app/homepage/_component/DdayController';
-import DdayList from '@/app/homepage/_component/D-Day';
-import Timer from '@/app/homepage/_component/Timer';
-import FocusOn from '@/app/homepage/_component/focusOn';
-import Memo from '@/app/homepage/_component/Memo';
+import { supabase } from '../lib/supabaseClient';
+import DdayController from '../app/homepage/_component/DdayController';
+import DdayList from '../app/homepage/_component/D-Day';
+import Timer from '../app/homepage/_component/timer';
+import FocusOn from '../app/homepage/_component/focusOn';
+import Memo from '../app/homepage/_component/Memo';
 
 export interface DdayItem {
   id: string;
