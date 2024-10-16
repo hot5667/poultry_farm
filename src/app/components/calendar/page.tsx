@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
 import browserClient  from '@/util/supabase/client';
-import { User } from '@supabase/supabase-js';
+
 
 // 달력 날짜 객체 타입 지정
 interface Day {
@@ -24,12 +24,19 @@ interface Event {
 const MyCalendar = () => {
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth());
+   // 일정( 날짜, 제목, 내용)을 저장하는 배열!
   const [events, setEvents] = useState<Event[]>([]);
+  // 모달 창이 열려있는지 여부를 관리!
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+   // 일정추가 시작일(from) , 죵료일(to) 
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined);
+   // 모달에서 받는 제목
   const [Title, setTitle] = useState<string>('');
+  // 모달에서 받는 내용
   const [Memo, setMemo] = useState<string>('');
+  // 수정중
   const [isEditing, setIsEditing] = useState<boolean>(false);
+    // 수정 중인 일정의 ID
   const [editingEventId, setEditingEventId] = useState<number | null>(null); 
 
   const monthNames: string[] = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
@@ -38,16 +45,36 @@ const MyCalendar = () => {
   // Supabase에서 이벤트 데이터 가져오기
   useEffect(() => {
     const fetchEvents = async () => {
-      const { data, error } = await browserClient.from('Challenge').select();
-      if (error) {browserClient
+      // 로그인한 유저 정보 가져오기
+      const { data: userData, error: userError } = await browserClient.auth.getUser();
+      
+      if (userError || !userData) {
+        console.error('유저 세션을 가져오는 중 에러 발생:', userError);
+        return;
+      }
+    
+      const user = userData?.user;
+    
+      if (!user) {
+        console.error('로그인된 유저가 없습니다.');
+        return;
+      }
+    
+      // 로그인한 유저의 일정만 가져오기
+      const { data, error } = await browserClient
+        .from('Challenge')
+        .select()
+        .eq('User_ID', user.id);  // User_ID가 현재 로그인한 유저의 id와 일치하는 것만 가져옴
+    
+      if (error) {
         console.error('데이터를 가져오는데 문제가 있나봐용~:', error);
       } else {
         setEvents(data.map((item: any) => ({
           Challenge_ID: item.Challenge_ID,
           Start_Date: item.Start_Date,
           End_Date: item.End_Date,
-          Title: item.Title, // 대문자 'Title'
-          Memo: item.Memo,   // 대문자 'Memo'
+          Title: item.Title, 
+          Memo: item.Memo,   
           User_ID: item.User_ID,
         })));
         console.log(data);
@@ -114,8 +141,8 @@ const MyCalendar = () => {
     if (isEdit && eventId !== null) {
       const eventToEdit = events.find(event => event.Challenge_ID === eventId);
       if (eventToEdit) {
-        setTitle(eventToEdit.Title);  // 제목
-        setMemo(eventToEdit.Memo);   // 설명
+        setTitle(eventToEdit.Title);                 // 제목
+        setMemo(eventToEdit.Memo);                  // 설명
         setSelectedRange({
           from: new Date(eventToEdit.Start_Date),   // 시작일
           to: new Date(eventToEdit.End_Date),       // 종료일
@@ -187,12 +214,13 @@ const MyCalendar = () => {
             Title: Title, 
             Memo: Memo, 
             User_ID: user.id ,
-            // Accumulated_Time: 0
+            
           })
           .select();
   
         if (error) {
           console.error('일정 추가 중 에러 발생:', error.message);
+          
         } else if (data && data.length > 0) {
           setEvents([...events, { 
             Challenge_ID: data[0].Challenge_ID, 

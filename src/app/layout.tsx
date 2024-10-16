@@ -18,7 +18,7 @@ const Navbar = () => {
         <ul className="flex items-center space-x-8">
           <NavLink href="/">홈</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
           <li className="nav-link">|</li>
