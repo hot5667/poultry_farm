@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect } from 'react';
 import ReactQueryProvider from '../util/ReactQueryProvider';
 import NavLink from '../components/NavLink';
