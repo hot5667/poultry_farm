@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase } from '@/lib/supabaseClient';
+import browserClient  from '@/util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -42,12 +42,12 @@ const FocusOn = () => {
 
   const fetchNickname = async () => {
     try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const { data: userData, error: userError } = await browserClient.auth.getUser();
       if (userError) throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
 
       const userId = userData?.user?.id;
       if (userId) {
-        const { data, error } = await supabase
+        const { data, error } = await browserClient
           .from('User')
           .select('NickName')
           .eq('UserID', userId)

@@ -69,7 +69,7 @@ const MyCalendar = () => {
       if (error) {
         console.error('데이터를 가져오는데 문제가 있나봐용~:', error);
       } else {
-        setEvents(data.map((item: any) => ({
+        setEvents(data.map((item: Event) => ({ 
           Challenge_ID: item.Challenge_ID,
           Start_Date: item.Start_Date,
           End_Date: item.End_Date,

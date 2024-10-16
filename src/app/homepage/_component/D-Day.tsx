@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import  browserClient  from '@/util/supabase/client';
 import { DdayItem } from '@/components/Main';
 
 interface DdayListProps {
@@ -28,7 +28,7 @@ const DdayList: React.FC<DdayListProps> = ({
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser();
+    } = await browserClient.auth.getUser();
     if (userError || !user) {
       console.error('User not authenticated');
       return;
@@ -42,7 +42,7 @@ const DdayList: React.FC<DdayListProps> = ({
       User_ID: user.id,
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await browserClient
       .from('Challenge')
       .insert(newDday)
       .select();
