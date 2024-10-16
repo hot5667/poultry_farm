@@ -1,4 +1,5 @@
-'use client';
+'use client'
+
 import { useEffect } from 'react';
 import ReactQueryProvider from '../util/ReactQueryProvider';
 import NavLink from '../components/NavLink';
@@ -10,19 +11,21 @@ const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuthStore();
 
   useEffect(() => {
-    const token = Cookies.get('token');
+    const token = Cookies.get('sb-ipybojcftcgitunzyror-auth-token');
     if (token) {
-      login(); // 쿠키가 있으면 로그인 상태로 전환
+      login(); 
+    } else {
+      logout(); 
     }
-  }, [login]);
+  }, [login, logout]);
 
   const handleLogout = () => {
-    Cookies.remove('token'); // 쿠키 삭제
-    logout(); // 상태 변경
+    Cookies.remove('sb-ipybojcftcgitunzyror-auth-token');  
+    logout();  
   };
 
   return (
-    <nav className="fixed z-10 w-full p-4 bg-white shadow-lg ">
+    <nav className="fixed z-10 w-full p-4 bg-white shadow-lg">
       <div className="container flex items-center justify-between mx-auto">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-black">양계장</h1>
@@ -36,12 +39,10 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           {isLoggedIn ? (
             <>
-              <button onClick={handleLogout} className="nav-link">
-                로그아웃
-              </button>
+              <button onClick={handleLogout} className="nav-link">로그아웃</button>
             </>
           ) : (
-            <NavLink href="/login">로그인</NavLink>
+            <NavLink href="/signin">로그인</NavLink>
           )}
           <NavLink href="/mypage">마이페이지</NavLink>
           <li className="nav-link">|</li>
