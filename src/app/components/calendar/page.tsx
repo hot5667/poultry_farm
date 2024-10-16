@@ -62,17 +62,22 @@ const MyCalendar = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
     let dates: Day[] = [];
+
+    // 이전달의 날짜
     const prevLastDate = new Date(year, month, 0).getDate();
     for (let i = firstDay - 1; i >= 0; i--) {
       dates.push({ date: prevLastDate - i, currentMonth: false });
     }
+    // 현재 달의 날짜
     for (let date = 1; date <= lastDate; date++) {
       dates.push({ date, currentMonth: true });
     }
+    // 다음달의 날짜
     const nextDays = 35 - dates.length;
     for (let i = 1; i <= nextDays; i++) {
       dates.push({ date: i, currentMonth: false });
     }
+    // 주단위 7일로 분리
     let weeks: Day[][] = [];
     for (let i = 0; i < dates.length; i += 7) {
       weeks.push(dates.slice(i, i + 7));
@@ -142,14 +147,14 @@ const MyCalendar = () => {
       const formattedEndDateStr = endDate.toISOString().split('T')[0];
   
       // 현재 사용자 세션 가져오기
-      const { data: sessionData, error: sessionError } = await browserClient.auth.getSession();
+      const { data: userData, error: userError } = await browserClient.auth.getUser();
       
-      if (sessionError || !sessionData?.session) {
-        console.error('유저 세션을 가져오는 중 에러 발생:', sessionError);
+      if (userError || !userData) {
+        console.error('유저 세션을 가져오는 중 에러 발생:', userError);
         return;
       }
   
-      const user = sessionData.session.user;
+      const user = userData?.user;
   
       if (!user) {
         console.error('로그인된 유저가 없습니다.');
@@ -176,7 +181,14 @@ const MyCalendar = () => {
         // 새 일정 추가
         const { data, error } = await browserClient
           .from('Challenge')
-          .insert([{ Start_Date: startDateStr, End_Date: formattedEndDateStr, Title, Memo, User_ID: user.id }])
+          .insert({ 
+            Start_Date: startDateStr, 
+            End_Date: formattedEndDateStr, 
+            Title: Title, 
+            Memo: Memo, 
+            User_ID: user.id ,
+            // Accumulated_Time: 0
+          })
           .select();
   
         if (error) {
@@ -261,7 +273,8 @@ const MyCalendar = () => {
                   </div>
                   {/* 저장된 일정 표시 */}
                   {events
-                    .filter(event => isDateInRange(new Date(currentYear, currentMonth, day.date), event.Start_Date, event.End_Date))
+                    .filter(event => 
+                      isDateInRange(new Date(currentYear, currentMonth, day.date), event.Start_Date, event.End_Date))
                     .map((event, idx) => (
                       <div 
                         key={idx} 
