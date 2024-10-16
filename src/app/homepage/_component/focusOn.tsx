@@ -12,12 +12,24 @@ const FocusOn = () => {
   } | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // 엔터입력
+  // 로컬 스토리지에서 값을 로드하는 함수
+  const loadFromLocalStorage = (key: string) => {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  };
+
+  // 로컬 스토리지에 값을 저장하는 함수
+  const saveToLocalStorage = (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  // 엔터 입력 처리
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       setSubmittedTask(task);
       setIsEditing(false);
+      saveToLocalStorage('submittedTask', task);
     }
   };
 
@@ -37,7 +49,7 @@ const FocusOn = () => {
           .single();
 
         if (error) throw new Error('닉네임을 가져오는 데 실패했습니다');
-        return data?.NickName || '';
+        return data?.NickName || 'guest';
       }
       throw new Error('로그인된 사용자가 없습니다');
     } catch (error) {
@@ -46,7 +58,7 @@ const FocusOn = () => {
       } else {
         console.error('알 수 없는 오류 발생', error);
       }
-      return '';
+      return 'guest';
     }
   };
 
@@ -71,6 +83,25 @@ const FocusOn = () => {
   useEffect(() => {
     fetchRandomQuote();
   }, []);
+
+  // 컴포넌트가 마운트될 때 로컬 스토리지에서 로드
+  useEffect(() => {
+    const savedTask = loadFromLocalStorage('task');
+    const savedSubmittedTask = loadFromLocalStorage('submittedTask');
+
+    if (savedTask) {
+      setTask(savedTask);
+    }
+
+    if (savedSubmittedTask) {
+      setSubmittedTask(savedSubmittedTask);
+    }
+  }, []);
+
+  // task 상태가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    saveToLocalStorage('task', task);
+  }, [task]);
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">

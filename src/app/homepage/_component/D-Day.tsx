@@ -23,7 +23,6 @@ const DdayList: React.FC<DdayListProps> = ({
   const [formVisible, setFormVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
-  //ddayList 상태관리를 전역 상태관리로 변경
   const [ddayList, setDdayList] = useState<DdayItem[]>([]);
 
   // D-day 계산
@@ -86,6 +85,7 @@ const DdayList: React.FC<DdayListProps> = ({
     const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
+
   function formatTimeSeconds(seconds: number) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -138,6 +138,11 @@ const DdayList: React.FC<DdayListProps> = ({
     fetchChallenges();
   }, []);
 
+  // 디테일 페이지로 이동하는 함수
+  const navigateToDetailPage = (challengeId: string) => {
+    window.location.href = `/detail/${challengeId}`;
+  };
+
   return (
     <div className="m-10">
       <h1 className="text-2xl font-bold">Challenge</h1>
@@ -160,6 +165,15 @@ const DdayList: React.FC<DdayListProps> = ({
             <span className="text-sm text-gray-500">
               누적 시간: {formatTimeSeconds(item.accumulatedTime ?? 0)}
             </span>
+            <button
+              className="text-xs z-10"
+              onClick={(e) => {
+                e.stopPropagation(); // 부모 div 클릭 이벤트 방지
+                navigateToDetailPage(item.id);
+              }}
+            >
+              수정
+            </button>
           </div>
         ))}
       </div>

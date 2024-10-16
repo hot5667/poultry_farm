@@ -1,8 +1,6 @@
 // components/DdayController.tsx
 'use client';
 import React, { useState } from 'react';
-import DdayList from './D-Day';
-import Timer from './Timer';
 
 interface DdayControllerProps {
   children: (props: {

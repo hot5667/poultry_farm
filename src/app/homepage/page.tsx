@@ -1,11 +1,11 @@
 // pages/homepage/page.tsx
 'use client';
 import React from 'react';
-import DdayController from './_component/DdayController';
 import DdayList from './_component/D-Day';
 import Memo from './_component/Memo';
 import FocusOn from './_component/FocusOn';
 import Timer from './_component/Timer';
+import DdayController from './_component/DdayController';
 
 const HomePage = () => {
   return (
@@ -23,6 +23,7 @@ const HomePage = () => {
             <div className="w-2/4 flex flex-col items-center mt-10">
               <Timer
                 selectedDdayId={selectedDdayId}
+                handleSelectDday={handleSelectDday} // handleSelectDday 함수를 전달
                 onTimeUpdate={handleTimeUpdate}
               />
               <FocusOn />
