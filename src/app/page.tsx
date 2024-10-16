@@ -1,3 +1,4 @@
+import MainComponent from '@/components/Main';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const Home = () => {
-  return <div>메인 페이지 입니다.</div>;
+  return <MainComponent />;
 };
 
 export default Home;

@@ -29,7 +29,7 @@ const Navbar = () => {
           <h1 className="text-2xl font-bold text-black">양계장</h1>
         </div>
         <ul className="flex items-center space-x-8">
-          <NavLink href="/homepage">홈</NavLink>
+          <NavLink href="/">홈</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>

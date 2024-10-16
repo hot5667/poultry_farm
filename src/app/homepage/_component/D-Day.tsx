@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { DdayItem } from '../page';
+import { DdayItem } from '@/components/Main';
 
 interface DdayListProps {
   onSelectDday: (id: string) => void;
