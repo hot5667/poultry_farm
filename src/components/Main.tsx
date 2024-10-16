@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import  browserClient  from '../util/supabase/client';
 import DdayController from '../app/homepage/_component/DdayController';
 import DdayList from '../app/homepage/_component/D-Day';
 import Timer from '../app/homepage/_component/timer';
@@ -30,13 +30,13 @@ const MainComponent = () => {
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser();
+    } = await browserClient.auth.getUser();
     if (userError || !user) {
       console.error('User not authenticated');
       return;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await browserClient
       .from('Challenge')
       .select('*')
       .eq('User_ID', user.id)
