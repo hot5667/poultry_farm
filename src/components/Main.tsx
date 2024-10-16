@@ -15,13 +15,6 @@ export interface DdayItem {
   accumulatedTime?: number;
 }
 
-export interface DdayItem {
-  id: string;
-  title: string;
-  dday: number;
-  accumulatedTime?: number;
-}
-
 const MainComponent = () => {
   const [ddayList, setDdayList] = useState<DdayItem[]>([]);
 
