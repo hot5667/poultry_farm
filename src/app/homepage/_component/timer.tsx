@@ -7,12 +7,13 @@ interface TimerProps {
   selectedDdayId: string | null;
   handleSelectDday: (id: string) => void;
   onTimeUpdate: (id: string, time: number) => void;
+  fetchChallenges: () => Promise<void>;
 }
 
 const Timer: React.FC<TimerProps> = ({
   selectedDdayId,
-  handleSelectDday,
   onTimeUpdate,
+  fetchChallenges,
 }) => {
   const queryClient = useQueryClient();
   const [time, setTime] = useState<number>(0);
@@ -57,6 +58,7 @@ const Timer: React.FC<TimerProps> = ({
       }
     },
     onSuccess: () => {
+      fetchChallenges();
       if (selectedDdayId) {
         queryClient.invalidateQueries({
           queryKey: ['challenge', selectedDdayId],
@@ -66,21 +68,18 @@ const Timer: React.FC<TimerProps> = ({
   });
 
   // 타이머 리셋 및 누적 시간 업데이트
-  const resetTimer = useCallback(
-    async (ddayId: string | null) => {
-      if (ddayId) {
-        onTimeUpdate(ddayId, time);
-        mutation.mutate({ ddayId, addedTime: time });
-      }
-      setTime(0);
-      setIsActive(false);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    },
-    [time, onTimeUpdate, mutation]
-  );
+  const resetTimer = async (ddayId: string | null) => {
+    if (ddayId) {
+      onTimeUpdate(ddayId, time);
+      mutation.mutate({ ddayId, addedTime: time });
+    }
+    setTime(0);
+    setIsActive(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
   // 타이머 상태 업데이트
   useEffect(() => {

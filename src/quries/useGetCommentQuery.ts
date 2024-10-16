@@ -1,5 +1,5 @@
-import { comment } from '@/type/comunity';
-import browserClient from '@/util/supabase/client';
+import { comment } from '../type/comunity';
+import browserClient from '../util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchSession = async (): Promise<comment[]> => {
