@@ -92,8 +92,7 @@ const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
       console.log('닉네임:', nickname);
       console.log('한줄 소개:', introduction || '한줄 소개 없음');
 
-      // 성공 시 다음 페이지로 이동하거나 성공 메시지 표시
-      router.push('/'); // 또는 다른 페이지로 이동
+      router.push('/'); 
 
     } catch (error) {
       console.error('데이터 저장 중 오류 발생:', error);
