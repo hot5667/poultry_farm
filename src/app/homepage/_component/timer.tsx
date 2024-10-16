@@ -1,80 +1,144 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TimerProps {
-  selectedDdayId: number | null;
-  onTimeUpdate: (id: number, time: number) => void;
+  selectedDdayId: string | null;
+  handleSelectDday: (id: string) => void;
+  onTimeUpdate: (id: string, time: number) => void;
 }
 
-const Timer: React.FC<TimerProps> = ({ selectedDdayId, onTimeUpdate }) => {
+const Timer: React.FC<TimerProps> = ({
+  selectedDdayId,
+  handleSelectDday,
+  onTimeUpdate,
+}) => {
+  const queryClient = useQueryClient();
   const [time, setTime] = useState<number>(0);
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [currentDdayId, setCurrentDdayId] = useState<number | null>(null);
-  let interval: number | undefined;
+  const [currentDdayId, setCurrentDdayId] = useState<string | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   // 타이머 시작/정지
-  const toggle = () => {
-    setIsActive(!isActive);
-  };
+  const toggleTimer = useCallback(() => {
+    setIsActive((prev) => !prev);
+  }, []);
 
-  // 타이머 리셋(이전 D-day에 시간 누적)
-  const reset = (ddayId: number | null) => {
-    if (ddayId !== null) {
-      onTimeUpdate(ddayId, time);
-    }
-    setTime(0);
-    setIsActive(false);
-    clearInterval(interval);
-  };
+  // Supabase에 누적 시간 업데이트를 처리하는 useMutation
+  const mutation = useMutation({
+    mutationFn: async ({
+      ddayId,
+      addedTime,
+    }: {
+      ddayId: string;
+      addedTime: number;
+    }) => {
+      const { data, error } = await supabase
+        .from('Challenge')
+        .select('Accumulated_Time')
+        .eq('Challenge_ID', ddayId)
+        .single();
 
+      if (error) {
+        throw new Error('현재 누적 시간을 가져오는 데 실패했습니다');
+      }
+
+      const currentAccumulatedTime = parseInt(data?.Accumulated_Time) || 0;
+      const newAccumulatedTime = currentAccumulatedTime + addedTime;
+
+      const { error: updateError } = await supabase
+        .from('Challenge')
+        .update({ Accumulated_Time: newAccumulatedTime })
+        .eq('Challenge_ID', ddayId);
+
+      if (updateError) {
+        throw new Error('누적 시간을 업데이트하는 데 실패했습니다');
+      }
+    },
+    onSuccess: () => {
+      if (selectedDdayId) {
+        queryClient.invalidateQueries({
+          queryKey: ['challenge', selectedDdayId],
+        });
+      }
+    },
+  });
+
+  // 타이머 리셋 및 누적 시간 업데이트
+  const resetTimer = useCallback(
+    async (ddayId: string | null) => {
+      if (ddayId) {
+        onTimeUpdate(ddayId, time);
+        mutation.mutate({ ddayId, addedTime: time });
+      }
+      setTime(0);
+      setIsActive(false);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    },
+    [time, onTimeUpdate, mutation]
+  );
+
+  // 타이머 상태 업데이트
   useEffect(() => {
     if (isActive) {
-      interval = window.setInterval(() => {
+      intervalRef.current = window.setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!isActive && time !== 0) {
-      clearInterval(interval);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
-    return () => clearInterval(interval);
-  }, [isActive, time]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isActive]);
 
-  // 다른 챌린지 선택시, 타이머 자동누적
+  // 선택된 D-day 변경에 따른 상태 업데이트
   useEffect(() => {
-    if (
-      selectedDdayId !== null &&
-      currentDdayId !== null &&
-      selectedDdayId !== currentDdayId
-    ) {
-      reset(currentDdayId);
-    }
-    setCurrentDdayId(selectedDdayId);
-  }, [selectedDdayId]);
+    if (selectedDdayId && currentDdayId !== selectedDdayId) {
+      if (currentDdayId) {
+        resetTimer(currentDdayId);
+      }
+      setCurrentDdayId(selectedDdayId);
 
-  //00:00:00으로 변환
-  const formatTime = (time: number) => {
-    const getSeconds = `0${time % 60}`.slice(-2);
-    const minutes = Math.floor(time / 60);
-    const getMinutes = `0${minutes % 60}`.slice(-2);
-    const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
-    return `${getHours}:${getMinutes}:${getSeconds}`;
-  };
+      queryClient.setQueryData(
+        ['challenge', selectedDdayId],
+        (prevData: any) => {
+          return prevData || 0;
+        }
+      );
+
+      const cachedTime = queryClient.getQueryData<number>([
+        'challenge',
+        selectedDdayId,
+      ]);
+      if (cachedTime !== undefined) {
+        setTime(cachedTime);
+      }
+    }
+  }, [selectedDdayId, currentDdayId, resetTimer, queryClient]);
 
   return (
-    // <div className="flex flex-col items-center justify-center m-10 border-2 border-soft rounded-full w-80 h-80 p-10">
-    <div className="flex flex-col items-center justify-center m-10 ">
+    <div className="flex flex-col items-center justify-center m-10">
       <h1 className="text-9xl font-semibold mt-20 text-soft">
         {formatTime(time)}
       </h1>
       <div className="flex flex-row items-center justify-center">
         <button
-          onClick={toggle}
+          onClick={toggleTimer}
           className="p-2 rounded hover:text-soft transition-colors duration-300"
         >
           {isActive ? 'STOP' : 'START'}
         </button>
         <button
-          onClick={() => reset(currentDdayId)}
+          onClick={() => resetTimer(currentDdayId)}
           className="p-2 rounded hover:text-soft transition-colors duration-300"
         >
           RESET
@@ -82,6 +146,15 @@ const Timer: React.FC<TimerProps> = ({ selectedDdayId, onTimeUpdate }) => {
       </div>
     </div>
   );
+};
+
+// 시간 포맷 변환 함수
+const formatTime = (time: number) => {
+  const getSeconds = `0${time % 60}`.slice(-2);
+  const minutes = Math.floor(time / 60);
+  const getMinutes = `0${minutes % 60}`.slice(-2);
+  const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
+  return `${getHours}:${getMinutes}:${getSeconds}`;
 };
 
 export default Timer;

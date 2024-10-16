@@ -1,8 +1,8 @@
 export type comment = {
   User_ID: string;
   feed_ID: string;
-  Comment_ID: string | null;
-  Comment_Content: string | null;
+  Comment_ID: number;
+  Comment_Content: string;
 };
 
 export type user = {
