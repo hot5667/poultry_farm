@@ -107,7 +107,7 @@ const FocusOn = () => {
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
-      <h1 className="mb-2 text-xl text-gray-500">
+      <h1 className="mb-6 text-xl text-gray-500">
         {nickname
           ? `${nickname}님, 오늘 가장 중요한 일은 뭔가요?`
           : '로딩 중...'}
@@ -135,11 +135,11 @@ const FocusOn = () => {
       )}
 
       {randomQuote && (
-        <p className="text-gray-500 text-m absolute bottom-10 w-full text-center mb-10">
+        <p className="text-soft text-xl absolute bottom-10 w-full text-center mb-8">
           "{randomQuote.quote}" - {randomQuote.author}
         </p>
       )}
-      <p className="text-gray-300 text-xs absolute bottom-10 w-full text-center">
+      <p className="text-gray-200 text-xs absolute bottom-10 w-full text-center">
         ⓒ 2024, 美치기7조전 - 내배캠 심화프로젝트
       </p>
     </div>

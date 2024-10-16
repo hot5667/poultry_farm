@@ -69,8 +69,8 @@ const MainComponent = () => {
   return (
     <DdayController>
       {({ selectedDdayId, handleSelectDday, handleTimeUpdate }) => (
-        <div className="flex justify-center w-full mt-10">
-          <div className="flex w-full">
+        <div className="flex justify-center w-full">
+          <div className="flex w-full mt-20">
             <div className="w-1/4">
               <DdayList
                 onSelectDday={handleSelectDday}
