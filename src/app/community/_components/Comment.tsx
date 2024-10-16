@@ -22,18 +22,18 @@ const Comment = ({ data }: PostData) => {
       setElementHeight(elementRef.current.clientHeight); // 또는 offsetHeight
     }
   }, []);
-  console.log(elementHeight);
+  console.log(data);
 
   return (
     <div className="flex">
-      <div className="relative min-w-[800px] max-w-[80%] mb-[40px] flex flex-col justify-between rounded-[10px] p-[20px] border  min-h-[380px]">
+      <div className="relative min-w-[800px] max-w-[80%] mb-[40px] flex flex-col justify-between p-[20px] border  min-h-[380px]">
         <div>
           <strong className="block text-[#A0D683] text-[32px]">
             {data.Category}
           </strong>
           <p className="block text-[24px]">{data.Challenge_Comment}</p>
         </div>
-        <div className="absolu flex flex-col items-center">
+        <div className="absolute top-[15px] right-[15px] flex flex-col items-center">
           <div className="overflow-hidden rounded-[50%]">
             <Image
               src={data.User?.UserImage || '/assets/default-profile.jpg'}
@@ -48,10 +48,7 @@ const Comment = ({ data }: PostData) => {
         <div>
           <div>
             <p>{data.Feed_Content}</p>
-            <ul>
-              <li>시작날: {data.Challenge_start_progress}</li>
-              <li>종료날: {data.Challenge_end_progress}</li>
-            </ul>
+            <p>{`챌린지 날짜 : ${data.Challenge_start_progress} ~ ${data.Challenge_end_progress}`}</p>
           </div>
           <CommentInput feedID={data.User_feed_ID} />
           {!isComment ? (
@@ -79,7 +76,7 @@ const Comment = ({ data }: PostData) => {
           !isComment
             ? elementHeight >= 470
               ? 'h-[380px] overflow-y-scroll p-4 box-border'
-              : 'max-h-[430px]  p-4'
+              : 'max-h-[380px] max-w[300px] overflow-y-scroll border border-l-0 p-4'
             : ''
         }
       >
@@ -90,7 +87,7 @@ const Comment = ({ data }: PostData) => {
                 key={comment.Comment_ID}
               >
                 <div>
-                  <p>{comment.Comment_Content}</p>
+                  <p className="w-[200px]">{comment.Comment_Content}</p>
                 </div>
                 <CommentButton
                   id={comment.Comment_ID}

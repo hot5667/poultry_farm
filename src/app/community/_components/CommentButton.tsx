@@ -49,24 +49,33 @@ const CommentButton = ({ id, userID, comentContent }: commentButton) => {
     <div className="flex">
       {userID === loginUserId ? (
         <>
-          <Button className="p-1" onClick={() => handleDelete(id)}>
+          <Button
+            className="p-1 border rounded-[4px] ml-[8px]"
+            onClick={() => handleDelete(id)}
+          >
             삭제
           </Button>
           <form onSubmit={handleSubmit}>
             {isUpdate ? (
               <>
                 <input
-                  className="input btn w-[100px] p-[4px]"
+                  className="input absolute left-[0] top-[0] h-[100%] w-[200px] bg-[#fff] rounded-[4px] btn  p-[4px]"
                   type="text"
                   value={comment}
                   onChange={handleUpdate}
                 />
-                <Button type="submit">수정하기</Button>
+
+                <Button
+                  className="p-1 border rounded-[4px] ml-[8px]"
+                  type="submit"
+                >
+                  수정하기
+                </Button>
               </>
             ) : (
               <Button
                 type="button"
-                className="p-1 ml-[8px]"
+                className="p-1 border rounded-[4px] ml-[8px]"
                 onClick={() => setUpdate(true)}
               >
                 수정
