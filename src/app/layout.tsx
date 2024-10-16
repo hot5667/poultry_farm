@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect } from 'react';
 import ReactQueryProvider from '../util/ReactQueryProvider';
 import NavLink from '../components/NavLink';
@@ -9,14 +11,14 @@ const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuthStore();
 
   useEffect(() => {
-    const token = Cookies.get('token');
+    const token = Cookies.get('sb-ipybojcftcgitunzyror-auth-token');
     if (token) {
       login();  // 쿠키가 있으면 로그인 상태로 전환
     }
   }, [login]);
 
   const handleLogout = () => {
-    Cookies.remove('token');  // 쿠키 삭제
+    Cookies.remove('sb-ipybojcftcgitunzyror-auth-token');  // 쿠키 삭제
     logout();  // 상태 변경
   };
 
@@ -38,7 +40,7 @@ const Navbar = () => {
               <button onClick={handleLogout} className="nav-link">로그아웃</button>
             </>
           ) : (
-            <NavLink href="/login">로그인</NavLink>
+            <NavLink href="/signin">로그인</NavLink>
           )}
         </ul>
       </div>
