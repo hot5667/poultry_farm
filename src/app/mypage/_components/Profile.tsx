@@ -4,7 +4,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import UploadImage from './UploadImage';
-import { useNicknameStore } from '@/store/usenicknamestore';
+import { useNicknameStore } from '@/store/useNicknameStore';
 
 interface ProfileProps {
   user: User;
