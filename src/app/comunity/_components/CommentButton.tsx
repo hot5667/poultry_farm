@@ -6,54 +6,51 @@ import {
 } from '@/mutations/comment-mutations';
 import { getCommentUserInfo } from '@/quries/useGetCommentUserQuery';
 import { SetStateAction, useState } from 'react';
+import Button from './Button';
+import { commentButton } from '@/type/comunity';
 
-interface data {
-  id: number;
-  userID: string;
-}
-
-const CommentButton = ({ id, userID }: data) => {
+const CommentButton = ({ id, userID }: commentButton) => {
   const [comment, setComment] = useState('');
   const { data } = getCommentUserInfo();
-
-  const loginUserID = data?.id;
+  const { mutate: deleteComment } = useDeleteMutation();
+  const { mutate: updateComment } = useUpdateMutation();
+  const loginUserId = data?.id;
 
   const handleUpdate = (e: { target: { value: SetStateAction<string> } }) => {
     setComment(e.target.value);
   };
-  const { mutate: delet } = useDeleteMutation();
-  const { mutate: update } = useUpdateMutation();
+
   const handleDelete = (id: number) => {
     const confirmDelete = window.confirm('삭제하시겠습니까?');
     if (confirmDelete) {
-      delet({ commentID: id });
+      deleteComment({ commentID: id });
     }
   };
 
   if (!data) return;
 
   return (
-    <div>
-      {userID === loginUserID ? (
+    <div className="flex">
+      {userID === loginUserId ? (
         <>
-          <button onClick={() => handleDelete(id)}>삭제</button>
+          <Button onClick={() => handleDelete(id)}>삭제</Button>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               setComment('');
-              update({
+              updateComment({
                 commentID: id,
                 comment: comment,
               });
             }}
           >
             <input
-              className="border"
+              className="btn w-[100px] p-[4px]"
               type="text"
               value={comment}
               onChange={handleUpdate}
             />
-            <button type="submit">수정하기</button>
+            <Button type="submit">수정하기</Button>
           </form>
         </>
       ) : null}

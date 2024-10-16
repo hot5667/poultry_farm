@@ -26,3 +26,14 @@ export type feed = {
   Comment: comment[];
   User: user;
 };
+
+export type searchData = {
+  mySearch: string;
+  setSearch: Function;
+  refetch: Function;
+};
+
+export type commentButton = {
+  id: number;
+  userID: string;
+};

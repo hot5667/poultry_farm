@@ -1,52 +1,55 @@
 'use client';
 
-import { useAddMutation } from '@/mutations/comment-mutations';
-import { getCommentQuery } from '@/quries/useGetCommentQuery';
-import { getCommentUserInfo } from '@/quries/useGetCommentUserQuery';
-import { SetStateAction, useState } from 'react';
+import { feed } from '@/type/comunity';
+import CommentButton from './CommentButton';
+import CommentInput from './CommentInput';
+import { useState } from 'react';
+import Button from './Button';
 
-interface id {
-  feedID: string;
-}
+type PostData = {
+  data: feed;
+};
 
-const Comment = ({ feedID }: id) => {
-  const [comment, setComment] = useState<string>('');
-  const { data, isLoading, isError } = getCommentQuery();
-  const { data: user } = getCommentUserInfo();
-
-  const { mutate } = useAddMutation();
-
-  console.log(feedID);
-
-  const handleComment = (e: { target: { value: SetStateAction<string> } }) => {
-    setComment(e.target.value);
-  };
-
-  if (!user) return <h2>댓글을 달려면 로그인을 해주세요</h2>;
-  if (!data) return <h2>데이터 오류</h2>;
-  if (isError) return <h2>데이터를 불러오지 못했습니다.</h2>;
+const Comment = ({ data }: PostData) => {
+  const [isComment, setComment] = useState(true);
 
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setComment('');
-          mutate({
-            userId: user.id,
-            feedID: feedID,
-            comment: comment,
-          });
-        }}
-      >
-        <input
-          className="border"
-          type="text"
-          value={comment}
-          onChange={handleComment}
-        />
-        <button type="submit">추가하기</button>
-      </form>
+    <div className="w-[31%] mb-[40px] p-[20px] border flex flex-col justify-between">
+      <div>
+        <strong className="block text-[32px]">{data.Category}</strong>
+        <p className="block text-[24px]">{data.Challenge_Comment}</p>
+      </div>
+      <div className="flex justify-between">
+        <strong className="block text-[14px]">{data.User?.NickName}</strong>
+        <p>{data.Feed_Content}</p>
+        <ul>
+          <li>시작날: {data.Challenge_start_progress}</li>
+          <li>종료날: {data.Challenge_end_progress}</li>
+        </ul>
+      </div>
+      {!isComment
+        ? data.Comment.map((comment) => (
+            <div
+              className="flex mt-[6px] items-center"
+              key={comment.Comment_ID}
+            >
+              <div>
+                <p>{comment.Comment_Content}</p>
+              </div>
+              <CommentButton id={comment.Comment_ID} userID={comment.User_ID} />
+            </div>
+          ))
+        : null}
+      {!isComment ? (
+        <Button type="button" onClick={() => setComment(true)}>
+          댓글닫기
+        </Button>
+      ) : (
+        <Button type="button" onClick={() => setComment(false)}>
+          댓글보기
+        </Button>
+      )}
+      <CommentInput feedID={data.User_feed_ID} />
     </div>
   );
 };
