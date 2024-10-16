@@ -45,21 +45,6 @@ const MyPage = async () => {
     },
   });
 
-  function exampleFunction() {
-    return new Promise((resolve) => {
-      setTimeout(async () => {
-        if (!user) return;
-        const { data, error } = await supabase // browserClient 사용
-          .from('User')
-          .select('*')
-          .eq('UserID', user.id);
-        if (!data) return;
-        // return data[0];
-      }, 1000);
-    });
-  }
-  const test = exampleFunction();
-  console.log(test);
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col justify-center items-center">
