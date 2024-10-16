@@ -4,8 +4,5 @@
          "src": "package.json",
          "use": "@vercel/static-build"
        }
-     ],
-     "eslint": {
-       "ignoreDuringBuilds": true
-     }
+     ]
    }
