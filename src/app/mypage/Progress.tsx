@@ -18,7 +18,7 @@ export const renderProgressImages = (progress: number) => {
           key={index}
           src={progressImages[index * 1]} // index에 따라 이미지 소스 결정
           alt={`${index * 25}%`}
-          className="w-12 h-12"
+          className="w-12 h-12 -ml-1 mt-3"
         />
       ))}
     </div>
@@ -45,7 +45,7 @@ export const calculateProgress = (challengeData: Challenge) => {
   // 챌린지가 시작되기 전인 경우
   const comingChallenge = today.getTime() - start.getTime();
   if (comingChallenge < 0) {
-    console.log('챌린지가 시작되지 않았습니다.');
+    // console.log('챌린지가 시작되지 않았습니다.');
     return 0;
   }
 
@@ -53,6 +53,8 @@ export const calculateProgress = (challengeData: Challenge) => {
   const progressDuration =
     Math.min(today.getTime(), end.getTime()) - start.getTime();
   const progressDays = Math.round(progressDuration / (1000 * 60 * 60 * 24)) + 1; // 진행 일수 (+1)로 반올림
+
+  // const daysLeft = Math.ceil(totalDuration / (1000 * 60 * 60 * 24));
 
   // 계산된 진행률
   const calculatedProgress = (progressDays / totalDays) * 100;
