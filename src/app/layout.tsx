@@ -22,7 +22,7 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          <NavLink href="/mypage">마이페이지</NavLink>
           <li className="nav-link">|</li>
           <NavLink href="/">작성해주세요</NavLink>
         </ul>
