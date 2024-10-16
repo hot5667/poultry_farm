@@ -66,7 +66,7 @@ const Profile = ({ user, session }: ProfileProps) => {
   };
 
   return (
-    <div className="w-[200px] h-auto p-2">
+    <div className="w-72 flex flex-col justify-center items-center h-auto p-4 rounded-lg shadow-md bg-white mb-10">
       {isEditing ? (
         <UploadImage
           uid={user.id}
@@ -95,7 +95,7 @@ const Profile = ({ user, session }: ProfileProps) => {
         {isEditing ? (
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             <input
-              className="border border-gray-500 mb-2"
+              className="w-48 p-1 underline underline-offset-2 mb-2 placeholder:text-sm text-gray-500 focus:outline-none"
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
