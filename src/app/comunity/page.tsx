@@ -6,13 +6,8 @@ export default function Comunity() {
   const day = now.getDate();
 
   return (
-    <div>
-      <h3>
-        {month}월{day}일
-      </h3>
-      <div>
-        <Post />
-      </div>
+    <div className="pt-[64px]">
+      <Post />
     </div>
   );
 }

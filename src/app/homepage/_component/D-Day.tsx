@@ -67,14 +67,6 @@ const DdayList: React.FC<DdayListProps> = ({
     setFormVisible(false);
   };
 
-  // const formatTime = (time: number) => {
-  //   const getSeconds = `0${time % 60}`.slice(-2);
-  //   const minutes = `${Math.floor(time / 60)}`;
-  //   const getMinutes = `0${Number(minutes) % 60}`.slice(-2);
-  //   const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
-  //   return `${getHours}:${getMinutes}:${getSeconds}`;
-  // };
-
   function formatTimeSeconds(seconds: number) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -87,11 +79,9 @@ const DdayList: React.FC<DdayListProps> = ({
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   }
 
-  // Supabase에서 Challenge 데이터를 가져오는 함수
-
   // 디테일 페이지로 이동하는 함수
   const navigateToDetailPage = (challengeId: string) => {
-    window.location.href = `/detail/${challengeId}`;
+    window.location.href = `/detail`;
   };
 
   return (

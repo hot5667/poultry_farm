@@ -3,10 +3,17 @@ import React, { useEffect, useState } from 'react';
 import DdayList from './_component/D-Day';
 import Memo from './_component/Memo';
 import DdayController from './_component/DdayController';
+import Timer from './_component/Timer';
 
-import FocusOn from './_component/FocusOn';
 import { supabase } from '@/lib/supabaseClient';
-import Timer from './_component/timer';
+import FocusOn from './_component/focusOn';
+
+export interface DdayItem {
+  id: string;
+  title: string;
+  dday: number;
+  accumulatedTime?: number;
+}
 
 export interface DdayItem {
   id: string;

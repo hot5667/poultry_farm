@@ -1,26 +1,35 @@
+'use client';
 import browserClient from '@/util/supabase/client';
+import { Session, User } from '@supabase/supabase-js';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 interface UploadImageProps {
   uid: string;
   currentUserImage: string | null;
+  session: Session;
 }
 
-const UploadImage = ({ uid, currentUserImage }: UploadImageProps) => {
+const UploadImage = ({ uid, currentUserImage, session }: UploadImageProps) => {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null); // 이미지 미리보기 상태
   const [selectedFile, setSelectedFile] = useState<File | null>(null); // 선택한 파일 상태
   const [confirmUpload, setConfirmUpload] = useState(false); // 업로드 확인 상태
+  const [profileImage, setProfileImage] = useState(currentUserImage);
 
   // 프로필 이미지 업로드 함수
   const uploadProfileImage = async () => {
     if (!selectedFile) return;
-
-    const filePath = `avatars/${uid}/avatar.${selectedFile.name.split('.').pop()}`; // 사용자 ID를 포함하여 고유한 경로 생성
-
+    const fileExtension = selectedFile.name.split('.').pop();
+    const filePath = `avatars/${uid}/avatar_${Date.now()}.${fileExtension}`; // 사용자 ID를 포함하여 고유한 경로 생성
     try {
       setUploading(true);
+
+      // 로그인 세션 확인
+      if (!session) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
 
       // 기존 파일 삭제
       const { error: deleteError } = await browserClient.storage
@@ -39,19 +48,23 @@ const UploadImage = ({ uid, currentUserImage }: UploadImageProps) => {
         .from('avatars')
         .getPublicUrl(filePath);
       const publicUrl = data?.publicUrl;
-      console.log('public===>', publicUrl);
+      // console.log('public===>', publicUrl);
 
       // User 테이블에 업데이트
-      const { data: updateDawta, error: updateError } = await browserClient
+      const { data: updateData, error: updateError } = await browserClient
         .from('User')
         .update({ UserImage: publicUrl })
         .eq('UserID', uid)
         .select();
-      if (updateError) throw updateError;
 
+      if (!updateData) return;
+      setProfileImage(updateData[0].UserImage);
+      // 페이지 새로 고침
+      window.location.reload();
+      if (updateError) throw updateError;
       alert('프로필 이미지 수정 완료!');
     } catch (error) {
-      alert(`프로필 이미지 수정 실패: ${error}`);
+      console.error('프로필 이미지 수정 실패', error);
     } finally {
       setUploading(false);
       setPreview(null); // 미리보기 해제
@@ -77,7 +90,6 @@ const UploadImage = ({ uid, currentUserImage }: UploadImageProps) => {
       }
     };
   }, [preview]);
-
   return (
     <div>
       <div className="mb-4">
@@ -88,13 +100,8 @@ const UploadImage = ({ uid, currentUserImage }: UploadImageProps) => {
             height={200}
             alt="Preview Image"
           />
-        ) : currentUserImage ? (
-          <Image
-            src={currentUserImage}
-            width={200}
-            height={200}
-            alt="User Image"
-          />
+        ) : profileImage ? (
+          <Image src={profileImage} width={200} height={200} alt="User Image" />
         ) : (
           <Image
             src="/assets/default-profile.jpg"
