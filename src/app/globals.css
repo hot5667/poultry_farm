@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.calendar-cell {
+  overflow: hidden; /* 셀의 크기를 넘는 내용을 숨김 */
+  white-space: nowrap; /* 텍스트가 셀을 넘지 않도록 함 */
+}
+
 .react-calendar-heatmap .color-empty {
   fill: #eeeeee; /* 빈 칸 색상 */
 }
