@@ -4,11 +4,12 @@ import { feed } from '../type/comunity';
 import browserClient from '../util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
+// .select('*, User(*), Comment(*)')
 async function fetchSearchPost(mysearch: string): Promise<feed[]> {
   const { data, error } = await browserClient
-    .from('feed')
+    .from('Challenge')
     .select('*, User(*), Comment(*)')
-    .ilike('Category', `%${mysearch}%`);
+    .ilike('Title', `%${mysearch}%`);
   if (error) {
     throw new Error();
   } else {

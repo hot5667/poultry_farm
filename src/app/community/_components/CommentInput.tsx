@@ -8,9 +8,10 @@ import Button from './Button';
 
 interface Id {
   feedID: string;
+  Challenge_ID: string;
 }
 
-const CommentInput = ({ feedID }: Id) => {
+const CommentInput = ({ feedID, Challenge_ID }: Id) => {
   const [comment, setComment] = useState<string>('');
   const { data, isError } = getCommentQuery();
   const { data: user } = getCommentUserInfo();
@@ -36,8 +37,8 @@ const CommentInput = ({ feedID }: Id) => {
     }
     mutate({
       userId: user.id,
-      feedID: feedID,
       comment: comment,
+      Challengeid: Challenge_ID,
     });
     setComment('');
   };
