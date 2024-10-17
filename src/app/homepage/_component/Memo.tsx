@@ -1,11 +1,16 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 
 const Memo = () => {
-  const [memoText, setMemoText] = useState(() => {
-    // 로컬 스토리지에서 메모 로드
+  const [memoText, setMemoText] = useState('');
+
+  // 컴포넌트가 마운트될 때 로컬 스토리지에서 메모 로드
+  useEffect(() => {
     const savedMemo = localStorage.getItem('memoText');
-    return savedMemo ? JSON.parse(savedMemo) : '';
-  });
+    if (savedMemo) {
+      setMemoText(JSON.parse(savedMemo));
+    }
+  }, []);
 
   // 메모가 변경될 때마다 로컬 스토리지에 저장
   useEffect(() => {
@@ -21,7 +26,7 @@ const Memo = () => {
         value={memoText}
         spellCheck="false"
         onChange={(e) => setMemoText(e.target.value)}
-      ></textarea>
+      />
     </div>
   );
 };

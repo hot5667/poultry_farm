@@ -1,4 +1,4 @@
-import browserClient from '@/util/supabase/client';
+import browserClient from '../util/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const addComment = async (comment: {

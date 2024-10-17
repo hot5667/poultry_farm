@@ -65,7 +65,6 @@ const MyPage = async () => {
         .select('*')
         .eq('UserID', user.id)
         .single(); // single() 사용하여 단일 결과 반환
-
       if (error) throw error;
       return data;
     },
@@ -125,4 +124,5 @@ const MyPage = async () => {
     </HydrationBoundary>
   );
 };
+
 export default MyPage;

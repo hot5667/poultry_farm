@@ -1,4 +1,4 @@
-import browserClient from '@/util/supabase/client';
+import browserClient from '../util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchUser = async () => {

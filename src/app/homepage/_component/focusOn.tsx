@@ -1,7 +1,9 @@
-import { supabase } from '@/lib/supabaseClient';
+'use client';
+
+import browserClient from '@/util/supabase/client';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import quotesData from '@/mockData';
 
 const FocusOn = () => {
   const [task, setTask] = useState('');
@@ -14,13 +16,18 @@ const FocusOn = () => {
 
   // 로컬 스토리지에서 값을 로드하는 함수
   const loadFromLocalStorage = (key: string) => {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
+    if (typeof window !== 'undefined') {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    }
+    return null;
   };
 
   // 로컬 스토리지에 값을 저장하는 함수
   const saveToLocalStorage = (key: string, value: any) => {
-    localStorage.setItem(key, JSON.stringify(value));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   };
 
   // 엔터 입력 처리
@@ -36,13 +43,13 @@ const FocusOn = () => {
   const fetchNickname = async () => {
     try {
       const { data: userData, error: userError } =
-        await supabase.auth.getUser();
+        await browserClient.auth.getUser();
       if (userError)
         throw new Error('로그인된 사용자 정보를 가져오는 데 실패했습니다');
 
       const userId = userData?.user?.id;
       if (userId) {
-        const { data, error } = await supabase
+        const { data, error } = await browserClient
           .from('User')
           .select('NickName')
           .eq('UserID', userId)
@@ -69,20 +76,14 @@ const FocusOn = () => {
   });
 
   // 명언 불러오기
-  const fetchRandomQuote = async () => {
+  const fetchRandomQuote = () => {
     try {
-      const response = await axios.get('http://localhost:4000/quotes');
-      const quotes = response.data;
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      setRandomQuote(quotes[randomIndex]);
+      const randomIndex = Math.floor(Math.random() * quotesData.length);
+      setRandomQuote(quotesData[randomIndex]);
     } catch (error) {
       console.error('명언을 불러오는 중 에러 발생:', error);
     }
   };
-
-  useEffect(() => {
-    fetchRandomQuote();
-  }, []);
 
   // 컴포넌트가 마운트될 때 로컬 스토리지에서 로드
   useEffect(() => {
@@ -96,6 +97,7 @@ const FocusOn = () => {
     if (savedSubmittedTask) {
       setSubmittedTask(savedSubmittedTask);
     }
+    fetchRandomQuote();
   }, []);
 
   // task 상태가 변경될 때마다 로컬 스토리지에 저장
@@ -105,7 +107,7 @@ const FocusOn = () => {
 
   return (
     <div className="flex flex-col items-center justify-center mt-10">
-      <h1 className="mb-2 text-xl text-gray-500">
+      <h1 className="mb-6 text-xl text-gray-500">
         {nickname
           ? `${nickname}님, 오늘 가장 중요한 일은 뭔가요?`
           : '로딩 중...'}
@@ -133,10 +135,13 @@ const FocusOn = () => {
       )}
 
       {randomQuote && (
-        <p className="text-gray-200 text-sm absolute bottom-10 w-full text-center">
+        <p className="text-soft text-l absolute bottom-10 w-full text-center mb-8">
           "{randomQuote.quote}" - {randomQuote.author}
         </p>
       )}
+      <p className="text-gray-200 text-xs absolute bottom-10 w-full text-center">
+        ⓒ 2024, 美치기7조전 - 내배캠 심화프로젝트
+      </p>
     </div>
   );
 };
