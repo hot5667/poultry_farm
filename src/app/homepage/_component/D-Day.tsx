@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef } from 'react';
-import  browserClient  from '@/util/supabase/client';
+import browserClient from '@/util/supabase/client';
 import { DdayItem } from '@/components/Main';
 
 interface DdayListProps {
@@ -109,8 +109,11 @@ const DdayList: React.FC<DdayListProps> = ({
                 누적 시간:
                 {formatTimeSeconds(item.accumulatedTime ?? 0)}
               </span>
+
               <button
-                className="text-xs z-10"
+                className={`text-xs z-10 text-gray-300 ${
+                  selectedDdayId === item.id ? ' text-gray-100 ' : ' text-soft'
+                }`}
                 onClick={(e) => {
                   e.stopPropagation(); // 부모 div 클릭 이벤트 방지
                   navigateToDetailPage(item.id);
