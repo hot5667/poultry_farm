@@ -36,4 +36,5 @@ export type searchData = {
 export type commentButton = {
   id: number;
   userID: string;
+  comentContent: string;
 };
