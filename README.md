@@ -108,7 +108,7 @@
   : 댓글의 수정, 삭제 구현.
 - 피드 검색
   : 제목으로 피드 검색 기능  구현
-  
+<img width="1153" alt="스크린샷 2024-10-17 오후 1 36 16" src="https://github.com/user-attachments/assets/06f1029c-f48a-4d3c-ade4-8f8e1754c6ae">
 
 ---
 
