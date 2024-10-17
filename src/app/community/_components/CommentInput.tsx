@@ -21,7 +21,10 @@ const CommentInput = ({ feedID }: Id) => {
     setComment(e.target.value);
   };
 
-  if (!user) return <h2>댓글을 달려면 로그인을 해주세요</h2>;
+  if (!user)
+    return (
+      <p className="my-[10px] text-center">댓글을 달려면 로그인을 해주세요</p>
+    );
   if (!data) return <h2>데이터 오류</h2>;
   if (isError) return <h2>데이터를 불러오지 못했습니다.</h2>;
 
@@ -40,14 +43,15 @@ const CommentInput = ({ feedID }: Id) => {
   };
 
   return (
-    <div className="my-[20px]">
-      <form className="flex justify-end" onSubmit={handleSubmit}>
+    <div className="mt-[15px]">
+      <form className="flex items-end relative" onSubmit={handleSubmit}>
         <input
-          className="btn w-[80%]"
+          className="input "
           type="text"
           value={comment}
           onChange={handleComment}
         />
+        <span className="underline"></span>
         <Button type={'submit'} className={'ml-[10px]'}>
           추가하기
         </Button>

@@ -1,16 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import ReactQueryProvider from '../util/ReactQueryProvider';
 import NavLink from '../components/NavLink';
 import { useAuthStore } from '../store/useAuthStore';
 import Cookies from 'js-cookie';
-
-export const metadata: Metadata = {
-  icons: {
-    icon: './favicon.ico',
-  },
-};
+import '../app/globals.css';
+import logo from '../../public/assets/logo.png';
+import Image from 'next/image';
 
 const Navbar = () => {
   const { isLoggedIn, login, logout } = useAuthStore();
@@ -33,6 +29,7 @@ const Navbar = () => {
     <nav className="fixed z-10 w-full p-4 bg-white shadow-lg">
       <div className="container flex items-center justify-between mx-auto">
         <div className="flex items-center">
+          <Image src={logo} width={30} height={30} alt="Logo Image"></Image>
           <h1 className="text-2xl font-bold text-black">양계장</h1>
         </div>
         <ul className="flex items-center space-x-8">
@@ -40,7 +37,7 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
+          <NavLink href="/community">커뮤니티</NavLink>
           <li className="nav-link">|</li>
           {isLoggedIn ? (
             <>
@@ -52,27 +49,10 @@ const Navbar = () => {
             <NavLink href="/signin">로그인</NavLink>
           )}
           <NavLink href="/mypage">마이페이지</NavLink>
-          <li className="nav-link">|</li>
-          <NavLink href="/">작성해주세요</NavLink>
         </ul>
       </div>
     </nav>
   );
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="ko">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
-      <body>
-        <Navbar />
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-      </body>
-    </html>
-  );
-}
+export default Navbar;

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import browserClient from '../util/supabase/client';
 import { AuthResponse } from '@supabase/supabase-js';
-import Label from './Label';
 import { useAuthStore } from '../store/useAuthStore';
 
 type AuthType = 'signup' | 'login';
@@ -62,26 +61,65 @@ const AuthForm = ({ type }: AuthFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <Label
-                labelText="이메일"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <Label
-                labelText="비밀번호"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+        <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4 w-full max-w-md p-4 mx-auto rounded-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl"
+        >
+            <h1 className="text-2xl font-bold text-center mb-4">
+                {type === 'signup' ? '회원가입' : '로그인'}
+            </h1>
+
+            {/* 인풋 필드 */}
+            <div className="rounded-lg overflow-hidden border-2 border-gray-300">
+                <div className="relative">
+                    <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="peer p-4 w-full bg-transparent focus:outline-none border-b border-gray-300"
+                        placeholder=" "
+                    />
+                    <label
+                        htmlFor="email"
+                        className={`absolute left-4 top-4 text-gray-500 transition-all ${
+                            email ? 'top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
+                        } peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]`}
+                    >
+                        이메일
+                    </label>
+                </div>
+                <div className="relative">
+                    <input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="peer p-4 w-full bg-transparent focus:outline-none"
+                        placeholder=" "
+                    />
+                    <label
+                        htmlFor="password"
+                        className={`absolute left-4 top-4 text-gray-500 transition-all ${
+                            password ? 'top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
+                        } peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]`}
+                    >
+                        비밀번호
+                    </label>
+                </div>
+            </div>
+
+            {/* 로그인 버튼 */}
             <button
                 type="submit"
                 disabled={isLoading}
-                className={`p-3 text-white rounded ${isLoading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'} transition-colors`}
+                className={`p-4 w-full text-white bg-[#03C75A] rounded-lg mt-4 ${
+                    isLoading ? 'bg-gray-400' : 'hover:bg-[#00B140]'
+                } transition-colors`}
             >
                 {isLoading ? '처리 중...' : type === 'signup' ? '가입하기' : '로그인'}
             </button>
+
             {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
             {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
         </form>
