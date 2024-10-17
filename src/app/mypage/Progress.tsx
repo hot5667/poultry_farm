@@ -9,7 +9,7 @@ export const progressImages = [
 ];
 
 // 진행률에 따라 이미지를 렌더링하는 함수
-export const renderProgressImages = (progress: number) => {
+export const renderProgressImages = (progress: number, size: string) => {
   const imageCount = Math.floor(progress / 25) + 1; // 0%와 현재 진행률 이미지를 포함
   return (
     <div className="flex gap-2">
@@ -18,7 +18,8 @@ export const renderProgressImages = (progress: number) => {
           key={index}
           src={progressImages[index * 1]} // index에 따라 이미지 소스 결정
           alt={`${index * 25}%`}
-          className="w-12 h-12 -ml-1 mt-3"
+          className={size} // 크기를 매개변수로 받음
+          // className="w-12 h-12 -ml-1 mt-3"
         />
       ))}
     </div>
@@ -34,8 +35,8 @@ const resetTimeToMidnight = (date: Date) => {
 
 // 진행률 계산
 export const calculateProgress = (challengeData: Challenge) => {
-  const start = resetTimeToMidnight(new Date(challengeData.Start_Date));
-  const end = resetTimeToMidnight(new Date(challengeData.End_Date));
+  const start = resetTimeToMidnight(new Date(challengeData?.Start_Date));
+  const end = resetTimeToMidnight(new Date(challengeData?.End_Date));
   const today = resetTimeToMidnight(new Date());
 
   // 전체 기간 계산
@@ -65,4 +66,34 @@ export const calculateProgress = (challengeData: Challenge) => {
   if (calculatedProgress < 75) return 50;
   if (calculatedProgress < 100) return 75;
   return 100;
+};
+
+export const calculateDDay = (endDate: string) => {
+  const targetDate = new Date(endDate); // 종료일
+  const today = new Date();
+  const gap = targetDate.getTime() - today.getTime();
+  return Math.ceil(gap / (1000 * 60 * 60 * 24));
+};
+
+export const dDay = (endProgress: string) => {
+  const targetDate = new Date(endProgress); // 종료일
+  const targetDay = new Date(targetDate);
+  const today = new Date();
+  const gap = targetDay.getTime() - today.getTime();
+  const daysLeft = Math.ceil(gap / (1000 * 60 * 60 * 24));
+  // 종료 날짜가 지났는지 확인
+  if (daysLeft < 0) {
+    return `D+${Math.abs(daysLeft)}`; // 종료일이 지났으면 D+N 형식으로 출력
+  } else {
+    return `D-${daysLeft}`; // 종료일이 남아있으면 D-N 형식으로 출력
+  }
+};
+
+// 시간 포맷 변환 함수
+export const formatTime = (time: number) => {
+  const getSeconds = `0${time % 60}`.slice(-2);
+  const minutes = Math.floor(time / 60);
+  const getMinutes = `0${minutes % 60}`.slice(-2);
+  const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
+  return `${getHours}:${getMinutes}:${getSeconds}`;
 };

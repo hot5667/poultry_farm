@@ -1,6 +1,6 @@
 'use client';
-import { useUploadStore } from '@/store/useUploadStore';
-import browserClient from '@/util/supabase/client';
+import { useUploadStore } from '../../../store/useUploadStore';
+import browserClient from '../../../util/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import Image from 'next/image';
 import React, { useEffect } from 'react';

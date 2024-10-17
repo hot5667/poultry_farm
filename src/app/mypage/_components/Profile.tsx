@@ -1,10 +1,10 @@
 'use client';
-import browserClient from '@/util/supabase/client';
+import browserClient from '../../../util/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import UploadImage from './UploadImage';
-import { useNicknameStore } from '@/store/useNicknameStore';
+import { useNicknameStore } from '../../../store/useNicknameStore';
 
 interface ProfileProps {
   user: User;
@@ -81,7 +81,7 @@ const Profile = ({ user, session }: ProfileProps) => {
   }
 
   return (
-    <div className="w-72 flex flex-col justify-center items-center h-auto p-4 rounded-lg shadow-md bg-white mb-10">
+    <div className="w-72 flex flex-col justify-center items-center h-auto p-3 rounded-lg shadow-md bg-white">
       {isEditing ? (
         <UploadImage
           uid={user.id}
