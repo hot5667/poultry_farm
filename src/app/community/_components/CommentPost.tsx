@@ -23,7 +23,7 @@ const CommentPost = () => {
           refetch={refetch}
         />
       </div>
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-col items-center">
         {user?.map((post) => <Comment key={post.User_ID} data={post} />)}
       </div>
     </>
