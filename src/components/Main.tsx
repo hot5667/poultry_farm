@@ -7,7 +7,7 @@ import DdayList from '../app/homepage/_component/D-Day';
 
 import FocusOn from '../app/homepage/_component/focusOn';
 import Memo from '../app/homepage/_component/Memo';
-import Timer from '@/app/homepage/_component/timer';
+import Timer from '@/app/homepage/_component/Timer';
 
 export interface DdayItem {
   id: string;
