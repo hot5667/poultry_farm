@@ -3,15 +3,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const addComment = async (comment: {
   userId: string;
-  feedID: string;
   comment: string;
+  Challengeid: string;
 }) => {
   return await browserClient
     .from('Comment')
     .insert({
       User_ID: comment.userId,
-      Feed_ID: comment.feedID,
       Comment_Content: comment.comment,
+      Challenge_ID: comment.Challengeid,
     })
     .select();
 };

@@ -11,6 +11,14 @@ type PostData = {
   data: feed;
 };
 
+export const formatTime = (time: number) => {
+  const getSeconds = `0${time % 60}`.slice(-2);
+  const minutes = Math.floor(time / 60);
+  const getMinutes = `0${minutes % 60}`.slice(-2);
+  const getHours = `0${Math.floor(time / 3600)}`.slice(-2);
+  return `${getHours}:${getMinutes}:${getSeconds}`;
+};
+
 const Comment = ({ data }: PostData) => {
   const [isComment, setComment] = useState(true);
 
@@ -22,6 +30,10 @@ const Comment = ({ data }: PostData) => {
       setElementHeight(elementRef.current.clientHeight); // 또는 offsetHeight
     }
   }, []);
+
+  const startDateStr = data.Start_Date.toString().split('T')[0];
+  const endDateStr = data.End_Date.toString().split('T')[0];
+
   console.log(data);
 
   return (
@@ -29,9 +41,9 @@ const Comment = ({ data }: PostData) => {
       <div className="relative min-w-[800px] max-w-[80%] mb-[40px] flex flex-col justify-between p-[20px] border  min-h-[380px]">
         <div>
           <strong className="block text-[#A0D683] text-[32px]">
-            {data.Category}
+            {data.User.NickName}
           </strong>
-          <p className="block text-[24px]">{data.Challenge_Comment}</p>
+          <p className="block text-[24px]">{data.Title}</p>
         </div>
         <div className="absolute top-[15px] right-[15px] flex flex-col items-center">
           <div className="overflow-hidden rounded-[50%]">
@@ -48,9 +60,12 @@ const Comment = ({ data }: PostData) => {
         <div>
           <div>
             <p>{data.Feed_Content}</p>
-            <p>{`챌린지 날짜 : ${data.Challenge_start_progress} ~ ${data.Challenge_end_progress}`}</p>
+            <p>{`챌린지 날짜 : ${startDateStr} ~ ${endDateStr}`}</p>
           </div>
-          <CommentInput feedID={data.User_feed_ID} />
+          <CommentInput
+            Challenge_ID={data.Challenge_ID}
+            feedID={data.User_feed_ID}
+          />
           {!isComment ? (
             <Button
               type="button"
@@ -80,8 +95,11 @@ const Comment = ({ data }: PostData) => {
             : ''
         }
       >
-        {!isComment
-          ? data.Comment.map((comment) => (
+        {!isComment ? (
+          data.Comment.length === 0 ? (
+            <p>댓글이 없습니다</p>
+          ) : (
+            data.Comment.map((comment) => (
               <div
                 className="flex mt-[6px] justify-between items-center relative min-h-[50px]"
                 key={comment.Comment_ID}
@@ -96,7 +114,8 @@ const Comment = ({ data }: PostData) => {
                 />
               </div>
             ))
-          : null}
+          )
+        ) : null}
       </div>
     </div>
   );
