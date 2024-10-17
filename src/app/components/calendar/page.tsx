@@ -298,8 +298,8 @@ const offset = new Date().getTimezoneOffset() * 60000;
   const weeks = generateCalendar(currentYear, currentMonth);
 
   return (
-    <div className="container p-4 mx-auto">
-      <div className="flex items-center justify-between mb-4">
+    <div className="container  ">
+      <div className="flex items-center space-x-[590px]  mb-4">
         <button onClick={prevMonth} className="px-4 py-2 text-white bg-soft  rounded-md hover:bg-soft">이전</button>
         <span className="text-lg font-semibold">{monthNames[currentMonth]} {currentYear}</span>
         <button onClick={nextMonth} className="px-4 py-2 text-white bg-soft rounded-md hover:bg-soft">다음</button>
@@ -330,7 +330,7 @@ const offset = new Date().getTimezoneOffset() * 60000;
                     {/* 일정 추가 버튼, 마우스 호버 시 표시 */}
                     <button
                       onClick={() => openModal(false)}
-                      className="absolute hidden px-4 py-2 text-white bg-soft rounded-md group-hover:block hover:bg-soft top-2 right-2"
+                      className="z-[20] absolute hidden px-1  text-white bg-soft rounded-md group-hover:block hover:bg-soft top-2 right-2"
                     >
                       +
                     </button>
@@ -353,7 +353,7 @@ const offset = new Date().getTimezoneOffset() * 60000;
       <div 
         key={idx} 
         onClick={() => openModal(true, event.Challenge_ID)}
-        className={`border-[1px] p-1 mt-2 text-sm rounded cursor-pointer relative z-[10] ${isInRange ? 'bg-white shadow-md' : ''}`} 
+        className={` border-[1px] p-1 mt-2 text-sm rounded cursor-pointer relative z-[10] ${isInRange ? 'bg-soft opacity-70 shadow-md' : ''}`} 
         style={{
           width: `${eventWidth(event.Start_Date, event.End_Date)}px`, // 가로 길이 동적으로 설정
           height: '28px', // 고정 높이 설정
@@ -409,7 +409,7 @@ const offset = new Date().getTimezoneOffset() * 60000;
               ></textarea>
             </div>
             <div className="flex justify-end">
-              <button onClick={saveEvent} className="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md">저장</button>
+              <button onClick={saveEvent} className="px-4 py-2 mr-2 text-white bg-soft rounded-md">저장</button>
               <button onClick={closeModal} className="px-4 py-2 text-white bg-gray-500 rounded-md">취소</button>
             </div>
           </div>
