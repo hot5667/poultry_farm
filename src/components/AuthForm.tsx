@@ -84,7 +84,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     <label
                         htmlFor="email"
                         className={`absolute left-4 top-4 text-gray-500 transition-all ${
-                            email ? 'top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
+                            email ? '!top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
                         } peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]`}
                     >
                         이메일
@@ -102,7 +102,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
                     <label
                         htmlFor="password"
                         className={`absolute left-4 top-4 text-gray-500 transition-all ${
-                            password ? 'top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
+                            password ? '!top-1 text-sm text-[#03C75A]' : 'peer-placeholder-shown:top-4 peer-placeholder-shown:text-base'
                         } peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]`}
                     >
                         비밀번호

@@ -90,7 +90,7 @@ const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
             />
             <label
               className={`absolute left-4 top-4 text-gray-500 transition-all 
-    ${nickname ? 'top-1 text-sm text-[#03C75A]' :
+    ${nickname ? '!top-1 text-sm text-[#03C75A]' :
                   'peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]'}`}
             >
               닉네임 (필수)
@@ -107,7 +107,7 @@ const AdditionalInfo = ({ params }: AdditionalInfoProps) => {
             />
             <label
               className={`absolute left-4 top-4 text-gray-500 transition-all 
-    ${introduction ? 'top-1 text-sm text-[#03C75A]' :
+    ${introduction ? '!top-1 text-sm text-[#03C75A]' :
                   'peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-sm peer-focus:text-[#03C75A]'}`}
             >
               한줄 소개 (선택)
