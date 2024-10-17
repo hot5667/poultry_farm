@@ -3,6 +3,7 @@ export type comment = {
   feed_ID: string;
   Comment_ID: number;
   Comment_Content: string;
+  Challenge_ID: string;
 };
 
 export type user = {
@@ -14,16 +15,18 @@ export type user = {
 };
 
 export type feed = {
+  Title: string;
   User_ID: string;
   User_feed_ID: string;
   Category: string | null;
   Challenge_Comment: string | null;
   Challenge_Images: string | null;
-  Challenge_end_progress: string | null;
-  Challenge_start_progress: string | null;
+  End_Date: string;
+  Start_Date: string;
   Feed_Content: string | null;
   progress_icon: string | null;
   Comment: comment[];
+  Challenge_ID: string;
   User: user;
 };
 
