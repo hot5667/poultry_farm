@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import  browserClient  from '../util/supabase/client';
+import browserClient from '../util/supabase/client';
 import DdayController from '../app/homepage/_component/DdayController';
 import DdayList from '../app/homepage/_component/D-Day';
-import Timer from '../app/homepage/_component/timer';
+
 import FocusOn from '../app/homepage/_component/focusOn';
 import Memo from '../app/homepage/_component/Memo';
+import Timer from '@/app/homepage/_component/timer';
 
 export interface DdayItem {
   id: string;
@@ -68,18 +69,18 @@ const MainComponent = () => {
   return (
     <DdayController>
       {({ selectedDdayId, handleSelectDday, handleTimeUpdate }) => (
-        <div className="flex justify-center">
-          <div className="w-1/4 mt-10">
-            <DdayList
-              onSelectDday={handleSelectDday}
-              selectedDdayId={selectedDdayId}
-              ddayList={ddayList}
-              calculateDday={calculateDday}
-              setDdayList={setDdayList}
-            />
-          </div>
-          <div className="w-3/4 flex flex-row items-start justify-between mt-10">
-            <div className="w-2/4 flex flex-col items-center mt-10">
+        <div className="flex justify-center w-full">
+          <div className="flex w-full mt-20">
+            <div className="w-1/4">
+              <DdayList
+                onSelectDday={handleSelectDday}
+                selectedDdayId={selectedDdayId}
+                ddayList={ddayList}
+                calculateDday={calculateDday}
+                setDdayList={setDdayList}
+              />
+            </div>
+            <div className="w-1/2 flex flex-col items-center">
               <Timer
                 selectedDdayId={selectedDdayId}
                 handleSelectDday={handleSelectDday}
@@ -88,7 +89,7 @@ const MainComponent = () => {
               />
               <FocusOn />
             </div>
-            <div className="w-1/4 flex items-start justify-end mt-10">
+            <div className="w-1/4 flex items-start justify-end">
               <Memo />
             </div>
           </div>

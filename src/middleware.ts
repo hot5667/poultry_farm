@@ -5,7 +5,7 @@ export function middleware(req: NextRequest) {
   const token = req.cookies.get('sb-ipybojcftcgitunzyror-auth-token');
 
   if (token) {
-    if (req.nextUrl.pathname === '/signin' ) {
+    if (req.nextUrl.pathname === '/signin' || req.nextUrl.pathname === '/signup' ){
       return NextResponse.redirect(new URL('/', req.url));
     }
   }
@@ -20,5 +20,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/signin', '/mypage', '/detail'],  
+  matcher: ['/signin','/signup', '/mypage', '/detail'],  
 };

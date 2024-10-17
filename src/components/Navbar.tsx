@@ -37,7 +37,9 @@ const Navbar = () => {
           <li className="nav-link">|</li>
           <NavLink href="/detail">캘린더</NavLink>
           <li className="nav-link">|</li>
-          <NavLink href="/community">커뮤니티</NavLink>
+          <NavLink href="/community">커뮤니티</NavLink>    
+          <li className="nav-link">|</li>
+          <NavLink href="/mypage">마이페이지</NavLink>
           <li className="nav-link">|</li>
           {isLoggedIn ? (
             <>
@@ -48,7 +50,8 @@ const Navbar = () => {
           ) : (
             <NavLink href="/signin">로그인</NavLink>
           )}
-          <NavLink href="/mypage">마이페이지</NavLink>
+          <li className="nav-link">|</li>
+          <NavLink href="/signup">회원가입</NavLink>
         </ul>
       </div>
     </nav>

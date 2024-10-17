@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const Signin = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen">
       <AuthPage type="login" />
     </div>
   );
