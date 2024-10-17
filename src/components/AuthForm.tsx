@@ -65,6 +65,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
             onSubmit={handleSubmit}
             className="flex flex-col gap-4 w-full max-w-md p-4 mx-auto rounded-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl"
         >
+            {/* 로그인/회원가입 타이틀 */}
             <h1 className="text-2xl font-bold text-center mb-4">
                 {type === 'signup' ? '회원가입' : '로그인'}
             </h1>
